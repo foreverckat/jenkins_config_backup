@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jenkins.plugins.clangscanbuild.ClangScanBuildDescriptor plugin="clang-scanbuild-plugin@1.7">
+  <installations/>
+</jenkins.plugins.clangscanbuild.ClangScanBuildDescriptor>

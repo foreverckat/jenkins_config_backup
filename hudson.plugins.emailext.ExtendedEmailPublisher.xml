@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hudson.plugins.emailext.ExtendedEmailPublisherDescriptor plugin="email-ext@2.57.2">
+  <smtpAuthUsername>jokercorp2015@163.com</smtpAuthUsername>
+  <smtpAuthPassword>liKUmCL8z8d4LcXa3N1MyDEKkfcEnXP9NtLj7FNJnCg=</smtpAuthPassword>
+  <smtpHost>smtp.163.com</smtpHost>
+  <useSsl>false</useSsl>
+  <smtpPort>25</smtpPort>
+  <charset>UTF-8</charset>
+  <defaultContentType>text/html</defaultContentType>
+  <defaultSubject>客户端内网IOS新版本发布-编号 # $BUILD_NUMBER - $BUILD_STATUS!</defaultSubject>
+  <defaultBody>    &lt;font color=&quot;#0B610B&quot; size=4&gt; 通知：  &lt;/font&gt;&#xd;
+    &lt;font color=&quot;#0B610B&quot; size=4&gt;&lt;/font&gt; Jenkins任务：${ENV, var=&quot;JOB_NAME&quot;} 已经执行完成&#xd;
+，请点击 &lt;a href=&quot;${BUILD_URL}console&quot;&gt;&lt;b&gt;&lt;font color=&quot;#DF0101&quot; size=5&gt;此链接跳转到Jenkins日志页面查看此次编译的日志信息&lt;/font&gt;&lt;/b&gt;&lt;/a&gt;  &#xd;
+    &lt;html&gt;  &#xd;
+    &lt;body leftmargin=&quot;8&quot; marginwidth=&quot;0&quot; topmargin=&quot;8&quot; marginheight=&quot;4&quot; offset=&quot;0&quot;&gt;  &#xd;
+    &lt;table width=&quot;95%&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;  style=&quot;font-size:11pt; font-family:Tahoma, Arial, Helvetica, sans-serif&quot;&gt;  &#xd;
+      &lt;tr&gt;  &#xd;
+        &lt;td&gt;&lt;h2&gt;&lt;font color=&quot;#0000FF&quot;&gt;构建结果 - ${BUILD_STATUS}&lt;/font&gt;&lt;/h2&gt;&lt;/td&gt;  &#xd;
+      &lt;/tr&gt;  &#xd;
+      &lt;tr&gt;  &#xd;
+        &lt;td&gt;&lt;br/&gt;&lt;b&gt;&lt;font color=&quot;#0B610B&quot;&gt;构建信息:&lt;/font&gt;&lt;/b&gt;&lt;hr size=&quot;2&quot; width=&quot;100%&quot; align=&quot;center&quot;/&gt;&lt;/td&gt;  &#xd;
+      &lt;/tr&gt;  &#xd;
+       &lt;tr&gt;  &#xd;
+        &lt;td&gt;  &#xd;
+            &lt;ul&gt;  &#xd;
+                    &lt;li&gt;项目名称 - &lt;font color=&quot;#0000FF&quot;&gt;${PROJECT_NAME}&lt;/font&gt;&lt;/li&gt;  &#xd;
+                    &lt;li&gt;构建文件清单 - &lt;a href=&quot;${PROJECT_URL}ws&quot;&gt;${PROJECT_URL}ws&lt;/a&gt;&lt;/li&gt;  &#xd;
+                    &lt;li&gt;项目管理地址 - &lt;a href=&quot;${PROJECT_URL}&quot;&gt;${PROJECT_URL}&lt;/a&gt;&lt;/li&gt;  &#xd;
+                    &lt;li&gt;此次项目构建地址- &lt;a href=&quot;${BUILD_URL}&quot;&gt;${BUILD_URL}&lt;/a&gt;&lt;/li&gt;  &#xd;
+                    &lt;li&gt;GIT最后一新提交版本号为&lt;font color=&quot;#0000FF&quot;&gt;${GIT_COMMIT}&lt;/font&gt;&lt;/li&gt;&#xd;
+            &lt;/ul&gt;  &#xd;
+        &lt;/td&gt;  &#xd;
+      &lt;/tr&gt;  &#xd;
+      &lt;tr&gt;  &#xd;
+        &lt;td&gt;&lt;b&gt;&lt;font color=&quot;#0B610B&quot;&gt;最近一次成功编译后的改动:&lt;/font&gt;&lt;/b&gt;&lt;hr size=&quot;2&quot; width=&quot;100%&quot; align=&quot;center&quot;/&gt;&lt;/td&gt;  &#xd;
+       &lt;/tr&gt;  &#xd;
+       &lt;tr&gt;  &#xd;
+        &lt;td&gt;  &#xd;
+            &lt;ul&gt;  &#xd;
+                    &lt;li&gt;查看历史改动内容: - 请点击&lt;a href=&quot;${PROJECT_URL}changes&quot;&gt;${PROJECT_URL}changes&lt;/a&gt;&lt;/li&gt;  &#xd;
+            &lt;/ul&gt;  &#xd;
+            ${CHANGES_SINCE_LAST_SUCCESS, reverse=true, format=&quot;Changes for Build #%n:&lt;br/&gt;%c&lt;br/&gt;&quot;, &#xd;
+showPaths=true, changesFormat=&quot;&lt;pre&gt;[%d]-[svn revision %r]-[%a]  &lt;br/&gt; 代码提交的注释：[%m]&lt;/pre&gt;&quot;, showPaths=&quot;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;%p&quot;}   &#xd;
+        &lt;/td&gt;  &#xd;
+       &lt;/tr&gt;       &#xd;
+    &lt;/table&gt;  &#xd;
+    &lt;/body&gt;  &#xd;
+    &lt;/html&gt;  &#xd;
+</defaultBody>
+  <defaultPresendScript></defaultPresendScript>
+  <defaultPostsendScript></defaultPostsendScript>
+  <defaultClasspath/>
+  <defaultTriggerIds>
+    <string>hudson.plugins.emailext.plugins.trigger.FailureTrigger</string>
+    <string>hudson.plugins.emailext.plugins.trigger.SuccessTrigger</string>
+  </defaultTriggerIds>
+  <maxAttachmentSize>-1</maxAttachmentSize>
+  <recipientList>wangat2001@qq.com</recipientList>
+  <defaultReplyTo></defaultReplyTo>
+  <excludedCommitters></excludedCommitters>
+  <overrideGlobalSettings>true</overrideGlobalSettings>
+  <precedenceBulk>false</precedenceBulk>
+  <debugMode>true</debugMode>
+  <requireAdminForTemplateTesting>false</requireAdminForTemplateTesting>
+  <enableWatching>true</enableWatching>
+</hudson.plugins.emailext.ExtendedEmailPublisherDescriptor>

@@ -1,0 +1,332 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>iOS客户端的持续集成打包任务：&#xd;
+1. 本任务用于执行iOS内网完整客户端的制作&#xd;
+2. 本任务严格限制在mac-mini或mac-pro上执行&#xd;
+</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <jenkins.model.BuildDiscarderProperty>
+      <strategy class="hudson.tasks.LogRotator">
+        <daysToKeep>3</daysToKeep>
+        <numToKeep>3</numToKeep>
+        <artifactDaysToKeep>-1</artifactDaysToKeep>
+        <artifactNumToKeep>-1</artifactNumToKeep>
+      </strategy>
+    </jenkins.model.BuildDiscarderProperty>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>BRANCH</name>
+          <description>客户端Xclient项目的Git代码分支的选择，内网包默认选择dev分支的代码</description>
+          <defaultValue>dev</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>code_sigin_identity</name>
+          <description>iOS打包客户端时，所使用的苹果签名证书，为默认标签，无需修改</description>
+          <defaultValue>iPhone Distribution: Chengdu Joker Interactive Technology Co., Ltd. (X2AW8NESLE)</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>provisioning_profile</name>
+          <description>iOS打包客户端时，所使用的苹果签名证书对应的provisioning文件，根据证书实际设置的provisioning文件来配置，包括包名ID都是对应好的，需要在苹果开发者网站查询或设置好，这里只是配置对应的标签名</description>
+          <defaultValue>youthcreative_adhoc</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>device_type</name>
+          <description>默认的打包类别，用于区分IOS打包制作，该变量会影响到版本制作脚本的逻辑，仅支持填写Android和iOS</description>
+          <defaultValue>iOS</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>version_type</name>
+          <description>打包的类别，用于版本部署网页的分类Tag标签，目前支持区分测试包还是正式包，对应的参数可填test和release</description>
+          <defaultValue>test</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>SPECIFIC_SVN_REV</name>
+          <description>客户端Xclient项目的SVN资源版本的选择，默认选择最新资源，可以指定对应REV号来使用指定版本资源</description>
+          <defaultValue>HEAD</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>package_Name</name>
+          <description>默认的渠道标签名，未指定时，默认为youthcreative的缩写yc</description>
+          <defaultValue>yc</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>RES_HOST_DEV</name>
+          <description>指定测试客户端的Lan标签用的资源服务器默认地址，目前公司服务器出口的地址均填写为域名，端口用于区分，其中8189对应测试包用，8188对应发布包用</description>
+          <defaultValue>http://innerres.youthcreative.cn:8189/</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>RES_HOST_PUBLISH</name>
+          <description>指定测试客户端的Publish标签用的资源服务器默认地址，目前公司服务器出口的地址均填写为域名，端口用于区分，其中8189对应测试包用，8188对应发布包用</description>
+          <defaultValue>http://innerres.youthcreative.cn:8188/</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>Launch_Server_Host</name>
+          <description>指定客户端的登陆服务器默认地址，目前公司服务器出口的地址均填写为域名，端口用于区分，其中9091对应测试包用，8091对应发布包用</description>
+          <defaultValue>http://innerres.youthcreative.cn:9091</defaultValue>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="org.jenkinsci.plugins.multiplescms.MultiSCM" plugin="multiple-scms@0.6">
+    <scms>
+      <hudson.plugins.git.GitSCM plugin="git@3.3.0">
+        <configVersion>2</configVersion>
+        <userRemoteConfigs>
+          <hudson.plugins.git.UserRemoteConfig>
+            <url>${CLIENT_REPO}</url>
+            <credentialsId>6e9dc5b1-d806-444b-a89c-12e5176babfa</credentialsId>
+          </hudson.plugins.git.UserRemoteConfig>
+        </userRemoteConfigs>
+        <branches>
+          <hudson.plugins.git.BranchSpec>
+            <name>refs/heads/${BRANCH}</name>
+          </hudson.plugins.git.BranchSpec>
+        </branches>
+        <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+        <submoduleCfg class="list"/>
+        <extensions>
+          <hudson.plugins.git.extensions.impl.SubmoduleOption>
+            <disableSubmodules>false</disableSubmodules>
+            <recursiveSubmodules>true</recursiveSubmodules>
+            <trackingSubmodules>false</trackingSubmodules>
+            <reference></reference>
+            <parentCredentials>false</parentCredentials>
+          </hudson.plugins.git.extensions.impl.SubmoduleOption>
+        </extensions>
+      </hudson.plugins.git.GitSCM>
+      <hudson.scm.SubversionSCM plugin="subversion@2.7.2">
+        <locations>
+          <hudson.scm.SubversionSCM_-ModuleLocation>
+            <remote>https://192.168.1.24/svn/JokerGameCode/game_editor/CustomEditor/StreamingAssets/iOS</remote>
+            <credentialsId>6e9dc5b1-d806-444b-a89c-12e5176babfa</credentialsId>
+            <local>./Assets/StreamingAssets/iOS</local>
+            <depthOption>infinity</depthOption>
+            <ignoreExternalsOption>true</ignoreExternalsOption>
+          </hudson.scm.SubversionSCM_-ModuleLocation>
+        </locations>
+        <excludedRegions></excludedRegions>
+        <includedRegions></includedRegions>
+        <excludedUsers></excludedUsers>
+        <excludedRevprop></excludedRevprop>
+        <excludedCommitMessages></excludedCommitMessages>
+        <workspaceUpdater class="hudson.scm.subversion.UpdateWithRevertUpdater"/>
+        <ignoreDirPropChanges>false</ignoreDirPropChanges>
+        <filterChangelog>false</filterChangelog>
+      </hudson.scm.SubversionSCM>
+      <hudson.plugins.git.GitSCM plugin="git@3.3.0">
+        <configVersion>2</configVersion>
+        <userRemoteConfigs>
+          <hudson.plugins.git.UserRemoteConfig>
+            <url>http://192.168.1.138/joker/jenkins_scripts.git</url>
+            <credentialsId>6e9dc5b1-d806-444b-a89c-12e5176babfa</credentialsId>
+          </hudson.plugins.git.UserRemoteConfig>
+        </userRemoteConfigs>
+        <branches>
+          <hudson.plugins.git.BranchSpec>
+            <name>*/master</name>
+          </hudson.plugins.git.BranchSpec>
+        </branches>
+        <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+        <submoduleCfg class="list"/>
+        <extensions>
+          <hudson.plugins.git.extensions.impl.RelativeTargetDirectory>
+            <relativeTargetDir>pythonscripts</relativeTargetDir>
+          </hudson.plugins.git.extensions.impl.RelativeTargetDirectory>
+        </extensions>
+      </hudson.plugins.git.GitSCM>
+    </scms>
+  </scm>
+  <assignedNode>ios_slave</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <jdk>(System)</jdk>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>#step 1: clean target.
+rm -fr target
+mkdir -p target
+mkdir -p $ build/Release-iphoneos/
+chmod -R a+w build
+#step 2: set enviroment variables
+echo SHORT_GIT_COMMIT=${GIT_COMMIT:0:6} &gt; hash.properties
+
+#step 3: generate version.json by running python script.
+cp pythonscripts/*.py .
+python GenAutoVersion.py
+#step 4: copy all code bin files by running python script.
+python CopyIOSScripts_py2.py
+cd ${WORKSPACE}
+security unlock-keychain -p joker2015 /Users/xgame/Library/Keychains/login.keychain
+echo &quot;=================================&quot;
+env
+echo SHORT_GIT_COMMIT=${GIT_COMMIT:0:6} &gt; hash.properties
+echo BUILD_PACKAGE_NAME=${BRANCH}_${JOKER_VERSION}_${GIT_COMMIT:0:6}_${SVN_REVISION_2}_build${BUILD_NUMBER}_${package_Name}_${device_type}_${version_type} &gt;&gt; hash.properties</command>
+    </hudson.tasks.Shell>
+    <EnvInjectBuilder plugin="envinject@2.0">
+      <info>
+        <propertiesFilePath>./hash.properties</propertiesFilePath>
+      </info>
+    </EnvInjectBuilder>
+    <org.jenkinsci.plugins.unity3d.Unity3dBuilder plugin="unity3d-plugin@1.3">
+      <unity3dName>unity5.3.3</unity3dName>
+      <argLine>-quit -batchmode -executeMethod MyEditorScript.PerformIOSBuildLanResInLocalInDevelopment -LogFIle ~/jenkins_build/jenkins_ios_unity_editor.log</argLine>
+      <unstableReturnCodes></unstableReturnCodes>
+    </org.jenkinsci.plugins.unity3d.Unity3dBuilder>
+    <hudson.tasks.Shell>
+      <command>#step 1: xcodebuild project.
+echo &quot;========================================= exe wanglei command 1 ===============================&quot;
+xcodebuild -configuration Debug -project ${WORKSPACE}/target/Xgame_build/Unity-iPhone.xcodeproj \
+-scheme &quot;Unity-iPhone&quot; -sdk iphoneos archive -archivePath ${WORKSPACE}/target/Xgame_build/build/archive DEVELOPMENT_TEAM=X2AW8NESLE CODE_SIGN_IDENTITY=&quot;${code_sigin_identity}&quot; \
+PROVISIONING_PROFILE_SPECIFIER=&quot;${provisioning_profile}&quot;
+#step 2: xcode export archive.
+echo &quot;========================================= exe wanglei command 2 ===============================&quot;
+xcodebuild -exportArchive -exportFormat IPA -archivePath ${WORKSPACE}/target/Xgame_build/build/archive.xcarchive \
+-exportPath ${WORKSPACE}/target/Xgame_build/build/Release-iphoneos/${BUILD_PACKAGE_NAME}.ipa \
+-exportProvisioningProfile &quot;${provisioning_profile}&quot;
+#step 3: generate all publish configuration files by running python scripts.
+cd ${WORKSPACE}
+python GenAutoScript.py
+rm -rf *.py
+
+</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <hudson.plugins.emailext.ExtendedEmailPublisher plugin="email-ext@2.57.2">
+      <recipientList>${DEFAULT_EMAIL_LIST}</recipientList>
+      <configuredTriggers>
+        <hudson.plugins.emailext.plugins.trigger.FailureTrigger>
+          <email>
+            <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+            <body>$PROJECT_DEFAULT_CONTENT</body>
+            <recipientProviders>
+              <hudson.plugins.emailext.plugins.recipients.DevelopersRecipientProvider/>
+            </recipientProviders>
+            <attachmentsPattern></attachmentsPattern>
+            <attachBuildLog>false</attachBuildLog>
+            <compressBuildLog>false</compressBuildLog>
+            <replyTo>$PROJECT_DEFAULT_REPLYTO</replyTo>
+            <contentType>project</contentType>
+          </email>
+        </hudson.plugins.emailext.plugins.trigger.FailureTrigger>
+        <hudson.plugins.emailext.plugins.trigger.SuccessTrigger>
+          <email>
+            <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+            <body>$PROJECT_DEFAULT_CONTENT</body>
+            <recipientProviders>
+              <hudson.plugins.emailext.plugins.recipients.ListRecipientProvider/>
+            </recipientProviders>
+            <attachmentsPattern></attachmentsPattern>
+            <attachBuildLog>false</attachBuildLog>
+            <compressBuildLog>false</compressBuildLog>
+            <replyTo>$PROJECT_DEFAULT_REPLYTO</replyTo>
+            <contentType>project</contentType>
+          </email>
+        </hudson.plugins.emailext.plugins.trigger.SuccessTrigger>
+      </configuredTriggers>
+      <contentType>default</contentType>
+      <defaultSubject>IOS 内网新版本发布-编号 # $BUILD_NUMBER - $BUILD_STATUS!</defaultSubject>
+      <defaultContent>$DEFAULT_CONTENT</defaultContent>
+      <attachmentsPattern></attachmentsPattern>
+      <presendScript>$DEFAULT_PRESEND_SCRIPT</presendScript>
+      <postsendScript>$DEFAULT_POSTSEND_SCRIPT</postsendScript>
+      <attachBuildLog>false</attachBuildLog>
+      <compressBuildLog>false</compressBuildLog>
+      <replyTo>$DEFAULT_REPLYTO</replyTo>
+      <saveOutput>false</saveOutput>
+      <disabled>false</disabled>
+    </hudson.plugins.emailext.ExtendedEmailPublisher>
+    <jenkins.plugins.publish__over__ftp.BapFtpPublisherPlugin plugin="publish-over-ftp@1.11">
+      <consolePrefix>FTP: </consolePrefix>
+      <delegate>
+        <publishers>
+          <jenkins.plugins.publish__over__ftp.BapFtpPublisher>
+            <configName>192.168.1.24</configName>
+            <verbose>false</verbose>
+            <transfers>
+              <jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+                <remoteDirectory>ClientBackup/${device_type}/${BRANCH}/</remoteDirectory>
+                <sourceFiles>target/Xgame_build/build/Release-iphoneos/*.ipa</sourceFiles>
+                <excludes></excludes>
+                <removePrefix>target/Xgame_build/build/Release-iphoneos/</removePrefix>
+                <remoteDirectorySDF>false</remoteDirectorySDF>
+                <flatten>false</flatten>
+                <cleanRemote>false</cleanRemote>
+                <noDefaultExcludes>false</noDefaultExcludes>
+                <makeEmptyDirs>false</makeEmptyDirs>
+                <patternSeparator>[, ]+</patternSeparator>
+                <asciiMode>false</asciiMode>
+              </jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+              <jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+                <remoteDirectory>ClientRelease/json/</remoteDirectory>
+                <sourceFiles>client.json</sourceFiles>
+                <excludes></excludes>
+                <removePrefix></removePrefix>
+                <remoteDirectorySDF>false</remoteDirectorySDF>
+                <flatten>false</flatten>
+                <cleanRemote>false</cleanRemote>
+                <noDefaultExcludes>false</noDefaultExcludes>
+                <makeEmptyDirs>false</makeEmptyDirs>
+                <patternSeparator>[, ]+</patternSeparator>
+                <asciiMode>false</asciiMode>
+              </jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+              <jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+                <remoteDirectory>ClientRelease/json/</remoteDirectory>
+                <sourceFiles>${BUILD_PACKAGE_NAME}.json</sourceFiles>
+                <excludes></excludes>
+                <removePrefix></removePrefix>
+                <remoteDirectorySDF>false</remoteDirectorySDF>
+                <flatten>false</flatten>
+                <cleanRemote>false</cleanRemote>
+                <noDefaultExcludes>false</noDefaultExcludes>
+                <makeEmptyDirs>false</makeEmptyDirs>
+                <patternSeparator>[, ]+</patternSeparator>
+                <asciiMode>false</asciiMode>
+              </jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+              <jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+                <remoteDirectory>ClientRelease/plist/</remoteDirectory>
+                <sourceFiles>${BUILD_PACKAGE_NAME}.plist</sourceFiles>
+                <excludes></excludes>
+                <removePrefix></removePrefix>
+                <remoteDirectorySDF>false</remoteDirectorySDF>
+                <flatten>false</flatten>
+                <cleanRemote>false</cleanRemote>
+                <noDefaultExcludes>false</noDefaultExcludes>
+                <makeEmptyDirs>false</makeEmptyDirs>
+                <patternSeparator>[, ]+</patternSeparator>
+                <asciiMode>false</asciiMode>
+              </jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+              <jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+                <remoteDirectory>ClientRelease/json/</remoteDirectory>
+                <sourceFiles>history.json</sourceFiles>
+                <excludes></excludes>
+                <removePrefix></removePrefix>
+                <remoteDirectorySDF>false</remoteDirectorySDF>
+                <flatten>false</flatten>
+                <cleanRemote>false</cleanRemote>
+                <noDefaultExcludes>false</noDefaultExcludes>
+                <makeEmptyDirs>false</makeEmptyDirs>
+                <patternSeparator>[, ]+</patternSeparator>
+                <asciiMode>false</asciiMode>
+              </jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+            </transfers>
+            <useWorkspaceInPromotion>false</useWorkspaceInPromotion>
+            <usePromotionTimestamp>false</usePromotionTimestamp>
+          </jenkins.plugins.publish__over__ftp.BapFtpPublisher>
+        </publishers>
+        <continueOnError>false</continueOnError>
+        <failOnError>false</failOnError>
+        <alwaysPublishFromMaster>false</alwaysPublishFromMaster>
+        <hostConfigurationAccess class="jenkins.plugins.publish_over_ftp.BapFtpPublisherPlugin" reference="../.."/>
+      </delegate>
+    </jenkins.plugins.publish__over__ftp.BapFtpPublisherPlugin>
+  </publishers>
+  <buildWrappers/>
+</project>

@@ -1,0 +1,330 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>真的勇士，敢于直面惨淡的人森&#xd;
+&#xd;
+版本制作参数：&#xd;
+&#xd;
+BRANCH 代码的GIT分支&#xd;
+device_type 设备分类，android和ios，仅对版本的显示分类，和版本备份起作用&#xd;
+version_type 版本分类，release为外网，test为内网，仅对版本的显示分类，即部署发布起作用&#xd;
+SPECIFIC_SVN_VERSION 指定专用的SVN资源版本进行打包，默认为HEAD即最新SVN资源&#xd;
+&#xd;
+&#xd;
+E:\android-sdk-windows&#xd;
+E:/android-ndk-r10e&#xd;
+C:/Program Files/Java/jdk1.8.0_65</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <EnvInjectJobProperty plugin="envinject@2.0">
+      <info>
+        <scriptContent>taskkill  /F /FI &quot;IMAGENAME eq unity*</scriptContent>
+        <secureGroovyScript plugin="script-security@1.27">
+          <script></script>
+          <sandbox>true</sandbox>
+        </secureGroovyScript>
+        <loadFilesFromMaster>false</loadFilesFromMaster>
+      </info>
+      <on>true</on>
+      <keepJenkinsSystemVariables>true</keepJenkinsSystemVariables>
+      <keepBuildVariables>true</keepBuildVariables>
+      <overrideBuildParameters>false</overrideBuildParameters>
+    </EnvInjectJobProperty>
+    <jenkins.model.BuildDiscarderProperty>
+      <strategy class="hudson.tasks.LogRotator">
+        <daysToKeep>1</daysToKeep>
+        <numToKeep>1</numToKeep>
+        <artifactDaysToKeep>-1</artifactDaysToKeep>
+        <artifactNumToKeep>-1</artifactNumToKeep>
+      </strategy>
+    </jenkins.model.BuildDiscarderProperty>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>BRANCH</name>
+          <description>客户端Xclient项目的Git代码分支的选择，发布包默认选择publish分支的代码</description>
+          <defaultValue>publish</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>device_type</name>
+          <description>默认的打包类别，用于区分IOS打包制作，该变量会影响到版本制作脚本的逻辑，仅支持填写android和ios</description>
+          <defaultValue>Android</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>version_type</name>
+          <description>打包的类别，用于版本部署网页的分类Tag标签，目前支持区分测试包还是正式包，对应的参数可填test和release</description>
+          <defaultValue>release</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>package_Name</name>
+          <description>默认的渠道标签名，未指定时，默认为youthcreative的缩写yc</description>
+          <defaultValue>QUDAO</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>SPECIFIC_SVN_VERSION</name>
+          <description>客户端Xclient项目的SVN资源版本的选择，默认选择最新资源，可以指定对应REV号来使用指定版本资源</description>
+          <defaultValue>HEAD</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>RES_HOST_PUBLISH</name>
+          <description>指定测试客户端的Publish标签用的资源服务器默认地址，目前公司服务器出口的地址均填写为域名，端口用于区分，其中8189对应测试包用，8188对应发布包用</description>
+          <defaultValue>http://innerres.youthcreative.cn:8188/</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>RES_HOST_DEV</name>
+          <description>指定测试客户端的Lan标签用的资源服务器默认地址，目前公司服务器出口的地址均填写为域名，端口用于区分，其中8189对应测试包用，8188对应发布包用</description>
+          <defaultValue>http://innerres.youthcreative.cn:8188/</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>Launch_Server_Host</name>
+          <description>指定客户端的登陆服务器默认地址，目前公司服务器出口的地址均填写为域名，端口用于区分，其中9091对应测试包用，8091对应发布包用</description>
+          <defaultValue>http://innerres.youthcreative.cn:8091</defaultValue>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="org.jenkinsci.plugins.multiplescms.MultiSCM" plugin="multiple-scms@0.6">
+    <scms>
+      <hudson.plugins.git.GitSCM plugin="git@3.3.0">
+        <configVersion>2</configVersion>
+        <userRemoteConfigs>
+          <hudson.plugins.git.UserRemoteConfig>
+            <url>${CLIENT_REPO}</url>
+            <credentialsId>6e9dc5b1-d806-444b-a89c-12e5176babfa</credentialsId>
+          </hudson.plugins.git.UserRemoteConfig>
+        </userRemoteConfigs>
+        <branches>
+          <hudson.plugins.git.BranchSpec>
+            <name>refs/heads/${BRANCH}</name>
+          </hudson.plugins.git.BranchSpec>
+        </branches>
+        <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+        <submoduleCfg class="list"/>
+        <extensions/>
+      </hudson.plugins.git.GitSCM>
+      <hudson.scm.SubversionSCM plugin="subversion@2.7.2">
+        <locations>
+          <hudson.scm.SubversionSCM_-ModuleLocation>
+            <remote>https://192.168.1.24/svn/JokerGameCode/game_editor/CustomEditor/Assets/Source/Local/Data/Code@${SPECIFIC_SVN_VERSION}</remote>
+            <credentialsId>6e9dc5b1-d806-444b-a89c-12e5176babfa</credentialsId>
+            <local>./Assets/Resources/Scripts</local>
+            <depthOption>infinity</depthOption>
+            <ignoreExternalsOption>false</ignoreExternalsOption>
+          </hudson.scm.SubversionSCM_-ModuleLocation>
+          <hudson.scm.SubversionSCM_-ModuleLocation>
+            <remote>https://192.168.1.24/svn/JokerGameCode/game_editor/CustomEditor/StreamingAssets/Android@${SPECIFIC_SVN_VERSION}</remote>
+            <credentialsId>6e9dc5b1-d806-444b-a89c-12e5176babfa</credentialsId>
+            <local>./Assets/StreamingAssets/Android</local>
+            <depthOption>infinity</depthOption>
+            <ignoreExternalsOption>true</ignoreExternalsOption>
+          </hudson.scm.SubversionSCM_-ModuleLocation>
+        </locations>
+        <excludedRegions></excludedRegions>
+        <includedRegions></includedRegions>
+        <excludedUsers></excludedUsers>
+        <excludedRevprop></excludedRevprop>
+        <excludedCommitMessages></excludedCommitMessages>
+        <workspaceUpdater class="hudson.scm.subversion.UpdateWithRevertUpdater"/>
+        <ignoreDirPropChanges>false</ignoreDirPropChanges>
+        <filterChangelog>false</filterChangelog>
+      </hudson.scm.SubversionSCM>
+      <hudson.plugins.git.GitSCM plugin="git@3.3.0">
+        <configVersion>2</configVersion>
+        <userRemoteConfigs>
+          <hudson.plugins.git.UserRemoteConfig>
+            <url>http://192.168.1.138/joker/jenkins_scripts.git</url>
+            <credentialsId>6e9dc5b1-d806-444b-a89c-12e5176babfa</credentialsId>
+          </hudson.plugins.git.UserRemoteConfig>
+        </userRemoteConfigs>
+        <branches>
+          <hudson.plugins.git.BranchSpec>
+            <name>*/master</name>
+          </hudson.plugins.git.BranchSpec>
+        </branches>
+        <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+        <submoduleCfg class="list"/>
+        <extensions>
+          <hudson.plugins.git.extensions.impl.RelativeTargetDirectory>
+            <relativeTargetDir>pythonscripts</relativeTargetDir>
+          </hudson.plugins.git.extensions.impl.RelativeTargetDirectory>
+        </extensions>
+      </hudson.plugins.git.GitSCM>
+    </scms>
+  </scm>
+  <assignedNode>resources_slave</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <jdk>(System)</jdk>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>#pwd
+#git add .
+#git stash
+#git fetch origin
+#git checkout ${BRANCH}
+#git pull origin ${BRANCH}
+
+
+
+
+#pwd:D:\jenkins_build\workspace\client_android_publish
+#step 1: clean target.
+rm -fr target
+mkdir -p target
+#cp ../../MyEditorScript.cs ./Assets/Editor/MyEditorScript.cs
+
+#step 2: reset android build enviroments.
+echo &quot;!!!!!!change JDK &amp; SDK &amp; NDK !!!!!!!&quot;
+sed -i &apos;0,/\ANDROIDSDK_IN_JEKENS_MACHINE.*/s/\ANDROIDSDK_IN_JEKENS_MACHINE.*/\ANDROIDSDK_IN_JEKENS_MACHINE=&quot;D:\\\\android-sdk-windows&quot;;/&apos; Assets/Editor/MyEditorScript.cs
+sed -i &apos;0,/\ANDROIDNDK_IN_JEKENS_MACHINE.*/s/\ANDROIDNDK_IN_JEKENS_MACHINE.*/\ANDROIDNDK_IN_JEKENS_MACHINE=&quot;D:\\\\android-ndk-r10e&quot;;/&apos; Assets/Editor/MyEditorScript.cs
+sed -i &apos;0,/\ANDROIDJDK_IN_JEKENS_MACHINE.*/s/\ANDROIDJDK_IN_JEKENS_MACHINE.*/\ANDROIDJDK_IN_JEKENS_MACHINE=&quot;C:\\\\Program Files (x86)\\\\Java\\\\jdk1.8.0&quot;;/&apos; Assets/Editor/MyEditorScript.cs
+
+#step 3: set enviroment variables
+echo SHORT_GIT_COMMIT=${GIT_COMMIT:0:4} &gt; hash.properties
+echo BUILD_PACKAGE_NAME=${BRANCH}_${JOKER_VERSION}_${GIT_COMMIT:0:6}_${SVN_REVISION_2}_build${BUILD_NUMBER}_${package_Name}_${device_type}_${version_type} &gt;&gt; hash.properties
+
+#step 4: generate version.json by running python script.
+cp pythonscripts/*.py .
+python GenAutoVersion.py</command>
+    </hudson.tasks.Shell>
+    <EnvInjectBuilder plugin="envinject@2.0">
+      <info>
+        <propertiesFilePath>./hash.properties</propertiesFilePath>
+      </info>
+    </EnvInjectBuilder>
+    <org.jenkinsci.plugins.unity3d.Unity3dBuilder plugin="unity3d-plugin@1.3">
+      <unity3dName>unity5.3.3_resource_win10</unity3dName>
+      <argLine>-quit -batchmode -executeMethod MyEditorScript.PerformAndroidBuildInternetResInLocal -logFile D:\jenkins_build\Editor_jenkins.log</argLine>
+      <unstableReturnCodes></unstableReturnCodes>
+    </org.jenkinsci.plugins.unity3d.Unity3dBuilder>
+    <hudson.tasks.Shell>
+      <command>#step 1: rename package
+cp target/Xgame_build.apk target/${BUILD_PACKAGE_NAME}.apk
+rm target/Xgame_build.apk
+#step 2: run python script to generating client.json and then publish to webpages for on-air client installing.
+python GenAutoScript.py</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <hudson.plugins.emailext.ExtendedEmailPublisher plugin="email-ext@2.57.2">
+      <recipientList>${DEFAULT_EMAIL_LIST}</recipientList>
+      <configuredTriggers>
+        <hudson.plugins.emailext.plugins.trigger.FailureTrigger>
+          <email>
+            <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+            <body>$PROJECT_DEFAULT_CONTENT</body>
+            <recipientProviders>
+              <hudson.plugins.emailext.plugins.recipients.DevelopersRecipientProvider/>
+            </recipientProviders>
+            <attachmentsPattern></attachmentsPattern>
+            <attachBuildLog>false</attachBuildLog>
+            <compressBuildLog>false</compressBuildLog>
+            <replyTo>$PROJECT_DEFAULT_REPLYTO</replyTo>
+            <contentType>project</contentType>
+          </email>
+        </hudson.plugins.emailext.plugins.trigger.FailureTrigger>
+        <hudson.plugins.emailext.plugins.trigger.SuccessTrigger>
+          <email>
+            <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+            <body>$PROJECT_DEFAULT_CONTENT</body>
+            <recipientProviders>
+              <hudson.plugins.emailext.plugins.recipients.ListRecipientProvider/>
+            </recipientProviders>
+            <attachmentsPattern></attachmentsPattern>
+            <attachBuildLog>false</attachBuildLog>
+            <compressBuildLog>false</compressBuildLog>
+            <replyTo>$PROJECT_DEFAULT_REPLYTO</replyTo>
+            <contentType>project</contentType>
+          </email>
+        </hudson.plugins.emailext.plugins.trigger.SuccessTrigger>
+      </configuredTriggers>
+      <contentType>default</contentType>
+      <defaultSubject>Android外网新版本发布-编号 # $BUILD_NUMBER - $BUILD_STATUS!</defaultSubject>
+      <defaultContent>$DEFAULT_CONTENT</defaultContent>
+      <attachmentsPattern></attachmentsPattern>
+      <presendScript>$DEFAULT_PRESEND_SCRIPT</presendScript>
+      <postsendScript>$DEFAULT_POSTSEND_SCRIPT</postsendScript>
+      <attachBuildLog>false</attachBuildLog>
+      <compressBuildLog>false</compressBuildLog>
+      <replyTo>$DEFAULT_REPLYTO</replyTo>
+      <saveOutput>false</saveOutput>
+      <disabled>false</disabled>
+    </hudson.plugins.emailext.ExtendedEmailPublisher>
+    <jenkins.plugins.publish__over__ftp.BapFtpPublisherPlugin plugin="publish-over-ftp@1.11">
+      <consolePrefix>FTP: </consolePrefix>
+      <delegate>
+        <publishers>
+          <jenkins.plugins.publish__over__ftp.BapFtpPublisher>
+            <configName>192.168.1.24</configName>
+            <verbose>false</verbose>
+            <transfers>
+              <jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+                <remoteDirectory>ClientBackup/${device_type}/${BRANCH}/</remoteDirectory>
+                <sourceFiles>target/*.apk</sourceFiles>
+                <excludes></excludes>
+                <removePrefix>target/</removePrefix>
+                <remoteDirectorySDF>false</remoteDirectorySDF>
+                <flatten>false</flatten>
+                <cleanRemote>false</cleanRemote>
+                <noDefaultExcludes>false</noDefaultExcludes>
+                <makeEmptyDirs>false</makeEmptyDirs>
+                <patternSeparator>[, ]+</patternSeparator>
+                <asciiMode>false</asciiMode>
+              </jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+              <jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+                <remoteDirectory>ClientRelease/json/</remoteDirectory>
+                <sourceFiles>client.json</sourceFiles>
+                <excludes></excludes>
+                <removePrefix></removePrefix>
+                <remoteDirectorySDF>false</remoteDirectorySDF>
+                <flatten>false</flatten>
+                <cleanRemote>false</cleanRemote>
+                <noDefaultExcludes>false</noDefaultExcludes>
+                <makeEmptyDirs>false</makeEmptyDirs>
+                <patternSeparator>[, ]+</patternSeparator>
+                <asciiMode>false</asciiMode>
+              </jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+              <jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+                <remoteDirectory>ClientRelease/json/</remoteDirectory>
+                <sourceFiles>${BUILD_PACKAGE_NAME}.json</sourceFiles>
+                <excludes></excludes>
+                <removePrefix></removePrefix>
+                <remoteDirectorySDF>false</remoteDirectorySDF>
+                <flatten>false</flatten>
+                <cleanRemote>false</cleanRemote>
+                <noDefaultExcludes>false</noDefaultExcludes>
+                <makeEmptyDirs>false</makeEmptyDirs>
+                <patternSeparator>[, ]+</patternSeparator>
+                <asciiMode>false</asciiMode>
+              </jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+              <jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+                <remoteDirectory>ClientRelease/json/</remoteDirectory>
+                <sourceFiles>history.json</sourceFiles>
+                <excludes></excludes>
+                <removePrefix></removePrefix>
+                <remoteDirectorySDF>false</remoteDirectorySDF>
+                <flatten>false</flatten>
+                <cleanRemote>false</cleanRemote>
+                <noDefaultExcludes>false</noDefaultExcludes>
+                <makeEmptyDirs>false</makeEmptyDirs>
+                <patternSeparator>[, ]+</patternSeparator>
+                <asciiMode>false</asciiMode>
+              </jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+            </transfers>
+            <useWorkspaceInPromotion>false</useWorkspaceInPromotion>
+            <usePromotionTimestamp>false</usePromotionTimestamp>
+          </jenkins.plugins.publish__over__ftp.BapFtpPublisher>
+        </publishers>
+        <continueOnError>false</continueOnError>
+        <failOnError>false</failOnError>
+        <alwaysPublishFromMaster>false</alwaysPublishFromMaster>
+        <hostConfigurationAccess class="jenkins.plugins.publish_over_ftp.BapFtpPublisherPlugin" reference="../.."/>
+      </delegate>
+    </jenkins.plugins.publish__over__ftp.BapFtpPublisherPlugin>
+  </publishers>
+  <buildWrappers/>
+</project>

@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <jenkins.model.BuildDiscarderProperty>
+      <strategy class="hudson.tasks.LogRotator">
+        <daysToKeep>3</daysToKeep>
+        <numToKeep>3</numToKeep>
+        <artifactDaysToKeep>-1</artifactDaysToKeep>
+        <artifactNumToKeep>-1</artifactNumToKeep>
+      </strategy>
+    </jenkins.model.BuildDiscarderProperty>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>EXCEL_CONFIG_PATH</name>
+          <description>策划配置文件，从SVN目录导出后使用的临时目录名</description>
+          <defaultValue>ExcelConfig</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>TEXT_CONFIG_PATH</name>
+          <description>将策划excel配置文件处理为text文件后的存储路径</description>
+          <defaultValue>TextConfig</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>CS_OUTPUT_PATH</name>
+          <description>将产出的数据表text文件转为csharp文件的储存路径</description>
+          <defaultValue>CSharpResources</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>Unity_Copy_CSharp</name>
+          <description>拷贝C#到本机的unity路径</description>
+          <defaultValue>D:\develop\Unity\Projects\xClient\BiuBiuLogic\BiuBiuLogic\BiuBiuLogic\Script\Table</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>Unity_Copy_TXT</name>
+          <description>拷贝TXT到本机的unity路径</description>
+          <defaultValue>D:\develop\Unity\Projects\xClient\Assets\Resources\Table</defaultValue>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="org.jenkinsci.plugins.multiplescms.MultiSCM" plugin="multiple-scms@0.6">
+    <scms>
+      <hudson.scm.SubversionSCM plugin="subversion@2.7.2">
+        <locations>
+          <hudson.scm.SubversionSCM_-ModuleLocation>
+            <remote>https://192.168.1.24/svn/JokerCardGame/Design/NEW/19.新版数值及配置文件/配置文件</remote>
+            <credentialsId>6e9dc5b1-d806-444b-a89c-12e5176babfa</credentialsId>
+            <local>${EXCEL_CONFIG_PATH}</local>
+            <depthOption>infinity</depthOption>
+            <ignoreExternalsOption>true</ignoreExternalsOption>
+          </hudson.scm.SubversionSCM_-ModuleLocation>
+        </locations>
+        <excludedRegions></excludedRegions>
+        <includedRegions></includedRegions>
+        <excludedUsers></excludedUsers>
+        <excludedRevprop></excludedRevprop>
+        <excludedCommitMessages></excludedCommitMessages>
+        <workspaceUpdater class="hudson.scm.subversion.UpdateWithRevertUpdater"/>
+        <ignoreDirPropChanges>false</ignoreDirPropChanges>
+        <filterChangelog>false</filterChangelog>
+      </hudson.scm.SubversionSCM>
+      <hudson.plugins.git.GitSCM plugin="git@3.3.0">
+        <configVersion>2</configVersion>
+        <userRemoteConfigs>
+          <hudson.plugins.git.UserRemoteConfig>
+            <url>http://192.168.1.138/joker/jenkins_scripts.git</url>
+            <credentialsId>6e9dc5b1-d806-444b-a89c-12e5176babfa</credentialsId>
+          </hudson.plugins.git.UserRemoteConfig>
+        </userRemoteConfigs>
+        <branches>
+          <hudson.plugins.git.BranchSpec>
+            <name>*/master</name>
+          </hudson.plugins.git.BranchSpec>
+        </branches>
+        <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+        <submoduleCfg class="list"/>
+        <extensions>
+          <hudson.plugins.git.extensions.impl.RelativeTargetDirectory>
+            <relativeTargetDir>PythonScripts</relativeTargetDir>
+          </hudson.plugins.git.extensions.impl.RelativeTargetDirectory>
+        </extensions>
+      </hudson.plugins.git.GitSCM>
+    </scms>
+  </scm>
+  <assignedNode>weike_slave</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>true</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <jdk>(System)</jdk>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>rm -rf *.py
+cp -rf PythonScripts/generate_static_data.py .
+cp -rf PythonScripts/generate_csharp_data.py .
+rm -rf PythonScripts*
+python generate_static_data.py
+python generate_csharp_data.py
+
+cp -f ${CS_OUTPUT_PATH}/*.cs ${Unity_Copy_CSharp}
+cp -f ${CS_OUTPUT_PATH}/*.txt ${Unity_Copy_TXT}
+
+</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

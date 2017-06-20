@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hudson.plugins.robot.RobotConfig plugin="robot@1.6.2">
+  <robotResultsColumnEnabled>true</robotResultsColumnEnabled>
+</hudson.plugins.robot.RobotConfig>

@@ -1,0 +1,220 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>部署后台管理服务器，且同步数据库版本,第一次部署时，需要登陆该服务器，手动执行一次setup,创建admin的superuser</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <jenkins.model.BuildDiscarderProperty>
+      <strategy class="hudson.tasks.LogRotator">
+        <daysToKeep>1</daysToKeep>
+        <numToKeep>1</numToKeep>
+        <artifactDaysToKeep>-1</artifactDaysToKeep>
+        <artifactNumToKeep>-1</artifactNumToKeep>
+      </strategy>
+    </jenkins.model.BuildDiscarderProperty>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>DB_NAME</name>
+          <description>对应的数据库的名字</description>
+          <defaultValue>x_project</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.PasswordParameterDefinition>
+          <name>DB_ROOT_PWD</name>
+          <description></description>
+          <defaultValue>+6uo+ilaoscnENBsov2sygsweCr1tHIsMCMdbA2mlhI=</defaultValue>
+        </hudson.model.PasswordParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>REGION_ID</name>
+          <description></description>
+          <defaultValue>1</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>LANUCH_DB_HOST</name>
+          <description></description>
+          <defaultValue>127.0.0.1</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>GAME_DB_HOST</name>
+          <description></description>
+          <defaultValue>127.0.0.1</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>CACHE_HOST</name>
+          <description></description>
+          <defaultValue>127.0.0.1</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>REGION_NAME</name>
+          <description></description>
+          <defaultValue>aliyun</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>APPROOT</name>
+          <description></description>
+          <defaultValue>joker</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>APPFOLDER</name>
+          <description></description>
+          <defaultValue>app</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>GAME_SERVER_URL</name>
+          <description>对应的本区的gameserver的http端口</description>
+          <defaultValue>http\:\/\/127.0.0.1\:8095</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>PORT</name>
+          <description>web端口</description>
+          <defaultValue>8000</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>BRANCH</name>
+          <description></description>
+          <defaultValue>release</defaultValue>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@2.4.2">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>${SERVER_REPO}</url>
+        <credentialsId>6e9dc5b1-d806-444b-a89c-12e5176babfa</credentialsId>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>*/${BRANCH}</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions>
+      <hudson.plugins.git.extensions.impl.SparseCheckoutPaths>
+        <sparseCheckoutPaths>
+          <hudson.plugins.git.extensions.impl.SparseCheckoutPath>
+            <path>server_admin</path>
+          </hudson.plugins.git.extensions.impl.SparseCheckoutPath>
+        </sparseCheckoutPaths>
+      </hudson.plugins.git.extensions.impl.SparseCheckoutPaths>
+    </extensions>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <jdk>(System)</jdk>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <jenkins.plugins.publish__over__ssh.BapSshBuilderPlugin plugin="publish-over-ssh@1.13">
+      <delegate>
+        <consolePrefix>SSH: </consolePrefix>
+        <delegate>
+          <publishers>
+            <jenkins.plugins.publish__over__ssh.BapSshPublisher>
+              <configName>aliyun</configName>
+              <verbose>false</verbose>
+              <transfers>
+                <jenkins.plugins.publish__over__ssh.BapSshTransfer>
+                  <remoteDirectory>${APPROOT}/${APPFOLDER}/admin_server/server_admin</remoteDirectory>
+                  <sourceFiles></sourceFiles>
+                  <excludes></excludes>
+                  <removePrefix></removePrefix>
+                  <remoteDirectorySDF>false</remoteDirectorySDF>
+                  <flatten>false</flatten>
+                  <cleanRemote>false</cleanRemote>
+                  <noDefaultExcludes>false</noDefaultExcludes>
+                  <makeEmptyDirs>false</makeEmptyDirs>
+                  <patternSeparator>[, ]+</patternSeparator>
+                  <execCommand>cd ${APPROOT}/${APPFOLDER}/admin_server
+
+rm -rf ./server_admin</execCommand>
+                  <execTimeout>120000</execTimeout>
+                  <usePty>false</usePty>
+                </jenkins.plugins.publish__over__ssh.BapSshTransfer>
+                <jenkins.plugins.publish__over__ssh.BapSshTransfer>
+                  <remoteDirectory>${APPROOT}/${APPFOLDER}/admin_server/server_admin</remoteDirectory>
+                  <sourceFiles>server_admin/**</sourceFiles>
+                  <excludes></excludes>
+                  <removePrefix>server_admin/</removePrefix>
+                  <remoteDirectorySDF>false</remoteDirectorySDF>
+                  <flatten>false</flatten>
+                  <cleanRemote>false</cleanRemote>
+                  <noDefaultExcludes>false</noDefaultExcludes>
+                  <makeEmptyDirs>false</makeEmptyDirs>
+                  <patternSeparator>[, ]+</patternSeparator>
+                  <execCommand>cd ${APPROOT}/${APPFOLDER}/admin_server/server_admin
+
+sed -i &quot;s/APP_ROOT =.*/APP_ROOT = &apos;${APPROOT}\/${APPFOLDER}&apos;/g&quot; ./config/x_project.py
+
+sed -i &quot;s/CACHE_HOST =.*/CACHE_HOST = &apos;${CACHE_HOST}&apos;/g&quot; ./config/x_project.py
+sed -i &quot;s/REGION_ID =.*/REGION_ID = ${REGION_ID}/g&quot; ./config/x_project.py
+sed -i &quot;s/REGION_NAME =.*/REGION_NAME = &apos;${REGION_NAME}&apos;/g&quot; ./config/x_project.py
+sed -i &quot;s/GAME_SERVER_URL =.*/GAME_SERVER_URL = &apos;${GAME_SERVER_URL}&apos;/g&quot; ./config/x_project.py
+
+sed -i &quot;92s/&apos;HOST&apos;.*/&apos;HOST&apos; : &apos;${GAME_DB_HOST}&apos;,/g&quot;  ./x_project_admin/settings.py
+sed -i &quot;100s/&apos;HOST&apos;.*/&apos;HOST&apos; : &apos;${LANUCH_DB_HOST}&apos;,/g&quot;  ./x_project_admin/settings.py
+sed -i &quot;89s/&apos;NAME&apos;.*/&apos;NAME&apos; : &apos;${DB_NAME}&apos;,/&quot;  ./x_project_admin/settings.py
+</execCommand>
+                  <execTimeout>120000</execTimeout>
+                  <usePty>false</usePty>
+                </jenkins.plugins.publish__over__ssh.BapSshTransfer>
+                <jenkins.plugins.publish__over__ssh.BapSshTransfer>
+                  <remoteDirectory>${APPROOT}/${APPFOLDER}/admin_server</remoteDirectory>
+                  <sourceFiles>server_admin/script/*</sourceFiles>
+                  <excludes></excludes>
+                  <removePrefix>server_admin/script</removePrefix>
+                  <remoteDirectorySDF>false</remoteDirectorySDF>
+                  <flatten>false</flatten>
+                  <cleanRemote>false</cleanRemote>
+                  <noDefaultExcludes>false</noDefaultExcludes>
+                  <makeEmptyDirs>false</makeEmptyDirs>
+                  <patternSeparator>[, ]+</patternSeparator>
+                  <execCommand>pwd
+
+cd ${APPROOT}/${APPFOLDER}/admin_server
+
+sed -i &quot;s/APP_ROOT=.*/APP_ROOT=${APPROOT}\/${APPFOLDER}/g&quot; joker_admin_server
+
+chmod a+x joker_admin_server
+bash joker_admin_server stop ${REGION_ID} ${PORT}
+
+echo &quot;we should check and create DB manually&quot;
+sed -i &quot;s/x_project/${DB_NAME}/g&quot;  dbsetup.sql
+sed -i &quot;s/ROOTPWD=.*/ROOTPWD=${DB_ROOT_PWD}/g&quot;  setup
+sed -i &quot;s/HOST=.*/HOST=${GAME_DB_HOST}/g&quot;  setup
+sed -i &quot;s/DATABASE_NAME=.*/DATABASE_NAME=${DB_NAME}/g&quot;  setup
+sed -i &quot;s/APPROOT=.*/APPROOT=${APPROOT}/g&quot;  setup
+sed -i &quot;s/APPFOLDER=.*/APPFOLDER=${APPFOLDER}/g&quot;  setup
+chmod +x setup
+bash setup
+
+echo &quot;sync db&quot;
+
+/opt/x_project_admin/bin/python ./server_admin/manage.py migrate --noinput
+/opt/x_project_admin/bin/python ./server_admin/manage.py migrate --noinput --database=JokerGame
+
+bash joker_admin_server start ${REGION_ID} ${PORT}</execCommand>
+                  <execTimeout>120000</execTimeout>
+                  <usePty>false</usePty>
+                </jenkins.plugins.publish__over__ssh.BapSshTransfer>
+              </transfers>
+              <useWorkspaceInPromotion>false</useWorkspaceInPromotion>
+              <usePromotionTimestamp>false</usePromotionTimestamp>
+            </jenkins.plugins.publish__over__ssh.BapSshPublisher>
+          </publishers>
+          <continueOnError>false</continueOnError>
+          <failOnError>false</failOnError>
+          <alwaysPublishFromMaster>false</alwaysPublishFromMaster>
+          <hostConfigurationAccess class="jenkins.plugins.publish_over_ssh.BapSshPublisherPlugin" reference="../.."/>
+        </delegate>
+      </delegate>
+    </jenkins.plugins.publish__over__ssh.BapSshBuilderPlugin>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>

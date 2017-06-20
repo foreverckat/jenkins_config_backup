@@ -1,0 +1,816 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hudson>
+  <disabledAdministrativeMonitors/>
+  <version>1.650</version>
+  <numExecutors>2</numExecutors>
+  <mode>NORMAL</mode>
+  <useSecurity>true</useSecurity>
+  <authorizationStrategy class="com.michelin.cio.hudson.plugins.rolestrategy.RoleBasedAuthorizationStrategy">
+    <roleMap type="projectRoles">
+      <role name="132_server_jobs" pattern="132.*">
+        <permissions>
+          <permission>hudson.model.Item.Cancel</permission>
+          <permission>hudson.model.Item.Read</permission>
+          <permission>hudson.model.Run.Delete</permission>
+          <permission>hudson.model.Item.Workspace</permission>
+          <permission>hudson.model.Item.Build</permission>
+          <permission>hudson.scm.SCM.Tag</permission>
+          <permission>hudson.model.Item.Discover</permission>
+          <permission>hudson.model.Run.Update</permission>
+        </permissions>
+        <assignedSIDs>
+          <sid>liulei</sid>
+          <sid>renchao</sid>
+          <sid>weike</sid>
+        </assignedSIDs>
+      </role>
+      <role name="132_server_manager" pattern="132.*">
+        <permissions>
+          <permission>hudson.model.Item.Delete</permission>
+          <permission>hudson.model.Item.Create</permission>
+          <permission>hudson.model.Item.Configure</permission>
+        </permissions>
+        <assignedSIDs>
+          <sid>renchao</sid>
+        </assignedSIDs>
+      </role>
+      <role name="aliyun_svr_jobs" pattern="aliyun.*">
+        <permissions>
+          <permission>hudson.model.Item.Cancel</permission>
+          <permission>hudson.model.Item.Read</permission>
+          <permission>hudson.model.Run.Delete</permission>
+          <permission>hudson.model.Item.Workspace</permission>
+          <permission>hudson.model.Item.Build</permission>
+          <permission>hudson.scm.SCM.Tag</permission>
+          <permission>hudson.model.Item.Discover</permission>
+          <permission>hudson.model.Run.Update</permission>
+        </permissions>
+        <assignedSIDs>
+          <sid>renchao</sid>
+        </assignedSIDs>
+      </role>
+      <role name="client_dev_jobs" pattern="client.*dev.*">
+        <permissions>
+          <permission>hudson.model.Item.Cancel</permission>
+          <permission>hudson.model.Item.Read</permission>
+          <permission>hudson.model.Run.Delete</permission>
+          <permission>hudson.model.Item.Workspace</permission>
+          <permission>hudson.model.Item.Build</permission>
+          <permission>hudson.scm.SCM.Tag</permission>
+          <permission>hudson.model.Item.Discover</permission>
+          <permission>hudson.model.Run.Update</permission>
+        </permissions>
+        <assignedSIDs>
+          <sid>liulei</sid>
+          <sid>renchao</sid>
+          <sid>design</sid>
+          <sid>weike</sid>
+          <sid>caozt</sid>
+        </assignedSIDs>
+      </role>
+      <role name="client_dev_manager" pattern="client.*dev.*">
+        <permissions>
+          <permission>hudson.model.Item.Create</permission>
+          <permission>hudson.model.Item.Configure</permission>
+        </permissions>
+        <assignedSIDs>
+          <sid>liulei</sid>
+          <sid>weike</sid>
+        </assignedSIDs>
+      </role>
+      <role name="client_publish_jobs" pattern="client.*publish.*">
+        <permissions>
+          <permission>hudson.model.Item.Cancel</permission>
+          <permission>hudson.model.Item.Read</permission>
+          <permission>hudson.model.Run.Delete</permission>
+          <permission>hudson.model.Item.Workspace</permission>
+          <permission>hudson.model.Item.Build</permission>
+          <permission>hudson.scm.SCM.Tag</permission>
+          <permission>hudson.model.Item.Discover</permission>
+          <permission>hudson.model.Run.Update</permission>
+        </permissions>
+        <assignedSIDs>
+          <sid>liulei</sid>
+          <sid>design</sid>
+          <sid>weike</sid>
+          <sid>caozt</sid>
+        </assignedSIDs>
+      </role>
+      <role name="client_publish_manager" pattern="client.*publish.*">
+        <permissions>
+          <permission>hudson.model.Item.Create</permission>
+          <permission>hudson.model.Item.Configure</permission>
+        </permissions>
+        <assignedSIDs>
+          <sid>liulei</sid>
+          <sid>weike</sid>
+        </assignedSIDs>
+      </role>
+      <role name="design_server_jobs" pattern="designer.*">
+        <permissions>
+          <permission>hudson.model.Item.Cancel</permission>
+          <permission>hudson.model.Item.Read</permission>
+          <permission>hudson.model.Run.Delete</permission>
+          <permission>hudson.model.Item.Workspace</permission>
+          <permission>hudson.model.Item.Build</permission>
+          <permission>hudson.scm.SCM.Tag</permission>
+          <permission>hudson.model.Item.Discover</permission>
+          <permission>hudson.model.Run.Update</permission>
+        </permissions>
+        <assignedSIDs>
+          <sid>renchao</sid>
+          <sid>caozt</sid>
+        </assignedSIDs>
+      </role>
+      <role name="design_svr_manager" pattern="designer.*">
+        <permissions>
+          <permission>hudson.model.Item.Create</permission>
+          <permission>hudson.model.Item.Configure</permission>
+        </permissions>
+        <assignedSIDs>
+          <sid>renchao</sid>
+        </assignedSIDs>
+      </role>
+      <role name="dev_svr_jobs" pattern="dev.*">
+        <permissions>
+          <permission>hudson.model.Item.Cancel</permission>
+          <permission>hudson.model.Item.Read</permission>
+          <permission>hudson.model.Run.Delete</permission>
+          <permission>hudson.model.Item.Workspace</permission>
+          <permission>hudson.model.Item.Build</permission>
+          <permission>hudson.scm.SCM.Tag</permission>
+          <permission>hudson.model.Item.Discover</permission>
+          <permission>hudson.model.Run.Update</permission>
+        </permissions>
+        <assignedSIDs>
+          <sid>renchao</sid>
+          <sid>caozt</sid>
+        </assignedSIDs>
+      </role>
+      <role name="dev_svr_manager" pattern="dev.*">
+        <permissions>
+          <permission>hudson.model.Item.Create</permission>
+          <permission>hudson.model.Item.Configure</permission>
+        </permissions>
+        <assignedSIDs>
+          <sid>renchao</sid>
+        </assignedSIDs>
+      </role>
+      <role name="lan_svr_jobs" pattern="lan.*release.*">
+        <permissions>
+          <permission>hudson.model.Item.Cancel</permission>
+          <permission>hudson.model.Item.Read</permission>
+          <permission>hudson.model.Run.Delete</permission>
+          <permission>hudson.model.Item.Workspace</permission>
+          <permission>hudson.model.Item.Build</permission>
+          <permission>hudson.scm.SCM.Tag</permission>
+          <permission>hudson.model.Item.Discover</permission>
+          <permission>hudson.model.Run.Update</permission>
+        </permissions>
+        <assignedSIDs>
+          <sid>liulei</sid>
+          <sid>renchao</sid>
+          <sid>design</sid>
+          <sid>weike</sid>
+          <sid>caozt</sid>
+        </assignedSIDs>
+      </role>
+      <role name="lan_svr_manager" pattern="lan.*release.*">
+        <permissions>
+          <permission>hudson.model.Item.Create</permission>
+          <permission>hudson.model.Item.Configure</permission>
+        </permissions>
+        <assignedSIDs>
+          <sid>renchao</sid>
+        </assignedSIDs>
+      </role>
+      <role name="resource_jobs" pattern="res_.*">
+        <permissions>
+          <permission>hudson.model.Item.Cancel</permission>
+          <permission>hudson.model.Item.Read</permission>
+          <permission>hudson.model.Run.Delete</permission>
+          <permission>hudson.model.Item.Workspace</permission>
+          <permission>hudson.model.Item.Build</permission>
+          <permission>hudson.scm.SCM.Tag</permission>
+          <permission>hudson.model.Item.Configure</permission>
+          <permission>hudson.model.Item.Discover</permission>
+          <permission>hudson.model.Run.Update</permission>
+        </permissions>
+        <assignedSIDs>
+          <sid>liulei</sid>
+          <sid>renchao</sid>
+          <sid>design</sid>
+          <sid>weike</sid>
+          <sid>caozt</sid>
+        </assignedSIDs>
+      </role>
+      <role name="sonar_svr_jobs" pattern="sonar.*">
+        <permissions>
+          <permission>hudson.model.Item.Cancel</permission>
+          <permission>hudson.model.Item.Read</permission>
+          <permission>hudson.model.Run.Delete</permission>
+          <permission>hudson.model.Item.Workspace</permission>
+          <permission>hudson.model.Item.Build</permission>
+          <permission>hudson.scm.SCM.Tag</permission>
+          <permission>hudson.model.Item.Discover</permission>
+          <permission>hudson.model.Run.Update</permission>
+        </permissions>
+        <assignedSIDs/>
+      </role>
+      <role name="sonar_svr_manager" pattern="sonar.*">
+        <permissions>
+          <permission>hudson.model.Item.Create</permission>
+          <permission>hudson.model.Item.Configure</permission>
+        </permissions>
+        <assignedSIDs/>
+      </role>
+      <role name="stress_svr_jobs" pattern="stress.*">
+        <permissions>
+          <permission>hudson.model.Item.Cancel</permission>
+          <permission>hudson.model.Item.Read</permission>
+          <permission>hudson.model.Run.Delete</permission>
+          <permission>hudson.model.Item.Workspace</permission>
+          <permission>hudson.model.Item.Build</permission>
+          <permission>hudson.scm.SCM.Tag</permission>
+          <permission>hudson.model.Item.Discover</permission>
+          <permission>hudson.model.Run.Update</permission>
+        </permissions>
+        <assignedSIDs/>
+      </role>
+      <role name="stress_svr_manager" pattern="stress.*">
+        <permissions>
+          <permission>hudson.model.Item.Create</permission>
+          <permission>hudson.model.Item.Configure</permission>
+        </permissions>
+        <assignedSIDs/>
+      </role>
+    </roleMap>
+    <roleMap type="globalRoles">
+      <role name="admin" pattern=".*">
+        <permissions>
+          <permission>hudson.model.View.Delete</permission>
+          <permission>hudson.model.Computer.Connect</permission>
+          <permission>hudson.model.Run.Delete</permission>
+          <permission>hudson.model.Hudson.UploadPlugins</permission>
+          <permission>com.cloudbees.plugins.credentials.CredentialsProvider.ManageDomains</permission>
+          <permission>hudson.model.Computer.Create</permission>
+          <permission>hudson.model.View.Configure</permission>
+          <permission>hudson.model.Hudson.ConfigureUpdateCenter</permission>
+          <permission>hudson.model.Computer.Build</permission>
+          <permission>hudson.model.Item.Configure</permission>
+          <permission>hudson.model.Hudson.Administer</permission>
+          <permission>hudson.model.Item.Cancel</permission>
+          <permission>hudson.model.Item.Read</permission>
+          <permission>com.cloudbees.plugins.credentials.CredentialsProvider.View</permission>
+          <permission>hudson.model.Computer.Delete</permission>
+          <permission>hudson.model.Item.Build</permission>
+          <permission>hudson.scm.SCM.Tag</permission>
+          <permission>hudson.model.Item.Discover</permission>
+          <permission>hudson.model.Hudson.Read</permission>
+          <permission>com.cloudbees.plugins.credentials.CredentialsProvider.Update</permission>
+          <permission>hudson.model.Item.Create</permission>
+          <permission>hudson.model.Item.Workspace</permission>
+          <permission>com.cloudbees.plugins.credentials.CredentialsProvider.Delete</permission>
+          <permission>hudson.model.View.Read</permission>
+          <permission>hudson.model.Hudson.RunScripts</permission>
+          <permission>hudson.model.View.Create</permission>
+          <permission>hudson.model.Item.Delete</permission>
+          <permission>hudson.model.Computer.Configure</permission>
+          <permission>com.cloudbees.plugins.credentials.CredentialsProvider.Create</permission>
+          <permission>hudson.model.Computer.Disconnect</permission>
+          <permission>hudson.model.Run.Update</permission>
+        </permissions>
+        <assignedSIDs>
+          <sid>renchao</sid>
+          <sid>chengjie</sid>
+        </assignedSIDs>
+      </role>
+      <role name="coder" pattern=".*">
+        <permissions>
+          <permission>hudson.model.Hudson.Read</permission>
+          <permission>hudson.model.Computer.Connect</permission>
+          <permission>hudson.model.Computer.Configure</permission>
+          <permission>hudson.model.Computer.Build</permission>
+        </permissions>
+        <assignedSIDs>
+          <sid>liulei</sid>
+          <sid>renchao</sid>
+          <sid>weike</sid>
+        </assignedSIDs>
+      </role>
+      <role name="designer" pattern=".*">
+        <permissions>
+          <permission>hudson.model.Hudson.Read</permission>
+          <permission>hudson.model.Computer.Connect</permission>
+          <permission>hudson.model.Computer.Configure</permission>
+          <permission>hudson.model.Computer.Build</permission>
+        </permissions>
+        <assignedSIDs>
+          <sid>design</sid>
+          <sid>caozt</sid>
+        </assignedSIDs>
+      </role>
+      <role name="qa" pattern=".*">
+        <permissions>
+          <permission>hudson.model.Hudson.Read</permission>
+        </permissions>
+        <assignedSIDs/>
+      </role>
+    </roleMap>
+    <roleMap type="slaveRoles"/>
+  </authorizationStrategy>
+  <securityRealm class="hudson.security.HudsonPrivateSecurityRealm">
+    <disableSignup>true</disableSignup>
+    <enableCaptcha>false</enableCaptcha>
+  </securityRealm>
+  <disableRememberMe>false</disableRememberMe>
+  <projectNamingStrategy class="jenkins.model.ProjectNamingStrategy$DefaultProjectNamingStrategy"/>
+  <workspaceDir>${ITEM_ROOTDIR}/workspace</workspaceDir>
+  <buildsDir>${ITEM_ROOTDIR}/builds</buildsDir>
+  <markupFormatter class="hudson.markup.EscapedMarkupFormatter"/>
+  <jdks>
+    <jdk>
+      <name>jdk1.8.0_72</name>
+      <home>/usr/lib/jvm/java-8-oracle</home>
+      <properties/>
+    </jdk>
+    <jdk>
+      <name>windows_jdk1.8.0.45</name>
+      <home>C:\Program Files\Java\jdk1.8.0_45</home>
+      <properties/>
+    </jdk>
+  </jdks>
+  <viewsTabBar class="hudson.views.DefaultViewsTabBar"/>
+  <myViewsTabBar class="hudson.views.DefaultMyViewsTabBar"/>
+  <clouds/>
+  <quietPeriod>5</quietPeriod>
+  <scmCheckoutRetryCount>0</scmCheckoutRetryCount>
+  <views>
+    <hudson.model.AllView>
+      <owner class="hudson" reference="../../.."/>
+      <name>All</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+    </hudson.model.AllView>
+    <listView>
+      <owner class="hudson" reference="../../.."/>
+      <name>外网测试服_141</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator"/>
+        <string>dev-chat-server</string>
+        <string>dev-star-all</string>
+        <string>dev-stop-all</string>
+        <string>dev_restart_all</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+      </columns>
+      <includeRegex>^dev.*</includeRegex>
+      <recurse>false</recurse>
+    </listView>
+    <listView>
+      <owner class="hudson" reference="../../.."/>
+      <name>策划数据服</name>
+      <description>策划数据服--dev分支：&#xd;
+admin:&#xd;
+http://192.168.1.140:8003/index&#xd;
+使用须知&#xd;
+1.本服是用于给数值策划调试用，数据库为140上的designer_3。&#xd;
+2.本服不会使用static_data.sql 覆盖数值提供的数据。&#xd;
+3.数据更新后，请重启gameserver&#xd;
+4.建议每次先更新admin_server，再更新game_server</description>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator" reference="../../../listView/jobNames/comparator"/>
+        <string>lan_release_3_admin_server</string>
+        <string>lan_release_3_center_server</string>
+        <string>lan_release_3_chat_server</string>
+        <string>lan_release_3_game_server</string>
+        <string>lan_release_3_gate_server</string>
+        <string>lan_release_3_gate_server_1223</string>
+        <string>lan_release_3_launch</string>
+        <string>lan_release_3_pvp</string>
+        <string>lan_release_3_pvp_match</string>
+        <string>lan_release_3_restart_game</string>
+        <string>lan_release_3_start_all_servers</string>
+        <string>lan_release_3_static_config_step1</string>
+        <string>lan_release_3_stop_all_servers</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+      </columns>
+      <includeRegex>lan_release.*</includeRegex>
+      <recurse>false</recurse>
+    </listView>
+    <listView>
+      <owner class="hudson" reference="../../.."/>
+      <name>策划通用服</name>
+      <description>策划通用服使用XX分支&#xd;
+admin: http://192.168.1.141:8002/index</description>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator" reference="../../../listView/jobNames/comparator"/>
+        <string>designer_2_admin_server</string>
+        <string>designer_2_center_server</string>
+        <string>designer_2_chat_server</string>
+        <string>designer_2_game_server</string>
+        <string>designer_2_gate_server</string>
+        <string>designer_2_restart_all_servers</string>
+        <string>designer_2_start_all_servers</string>
+        <string>designer_2_stop_all_servers</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+      </columns>
+      <includeRegex>designer_2.*</includeRegex>
+      <recurse>false</recurse>
+    </listView>
+    <listView>
+      <owner class="hudson" reference="../../.."/>
+      <name>版署服-147</name>
+      <description>策划关卡服使用dev分支&#xd;
+admin: http://192.168.1.147:8001/index&#xd;
+1.关卡配置直接使用外部的文件（从SVN上dump下来的）</description>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator" reference="../../../listView/jobNames/comparator"/>
+        <string>147-dev-admin</string>
+        <string>147_dev_icon</string>
+        <string>147_dev_launch</string>
+        <string>147_dev_pvp</string>
+        <string>147_dev_pvp_match</string>
+        <string>designer_1_center_server</string>
+        <string>designer_1_chat_server</string>
+        <string>designer_1_game_server</string>
+        <string>designer_1_gate_server</string>
+        <string>designer_1_restart_all_servers</string>
+        <string>designer_1_start_all_servers</string>
+        <string>designer_1_stop_all_servers</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+      </columns>
+      <includeRegex>designer_1.*</includeRegex>
+      <recurse>false</recurse>
+    </listView>
+    <listView>
+      <owner class="hudson" reference="../../.."/>
+      <name>stress_server</name>
+      <description>压力测试服务器使用stress | release分支&#xd;
+</description>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator" reference="../../../listView/jobNames/comparator"/>
+        <string>stress_admin_137</string>
+        <string>stress_center_137</string>
+        <string>stress_chat_137</string>
+        <string>stress_game_136</string>
+        <string>stress_game_server</string>
+        <string>stress_gate_135</string>
+        <string>stress_launch_134</string>
+        <string>stress_restart_all</string>
+        <string>stress_start_all</string>
+        <string>stress_stop_all</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+      </columns>
+      <includeRegex>stress_.*</includeRegex>
+      <recurse>false</recurse>
+    </listView>
+    <listView>
+      <owner class="hudson" reference="../../.."/>
+      <name>外网登陆服务器</name>
+      <description>外网登陆服务器-stress分支</description>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator" reference="../../../listView/jobNames/comparator"/>
+        <string>launch_dev_start</string>
+        <string>launch_dev_stop</string>
+        <string>pvp_match_server</string>
+        <string>pvp_match_server_restart</string>
+        <string>pvp_server_slave</string>
+        <string>pvp_server_slave_restart</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+      </columns>
+      <includeRegex>launch_.*</includeRegex>
+      <recurse>false</recurse>
+    </listView>
+    <listView>
+      <owner class="hudson" reference="../../.."/>
+      <name>aliyun_server</name>
+      <description>外网默认使用release分支:&#xd;
+admin: http://139.196.201.91:8000/index</description>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator" reference="../../../listView/jobNames/comparator"/>
+        <string>aliyun_admin_server</string>
+        <string>aliyun_center_server</string>
+        <string>aliyun_chat_server</string>
+        <string>aliyun_game_server</string>
+        <string>aliyun_gate_server</string>
+        <string>aliyun_launch_server</string>
+        <string>aliyun_pvp_match_server</string>
+        <string>aliyun_pvp_server</string>
+        <string>aliyun_server_restart</string>
+        <string>aliyun_start_all_servers</string>
+        <string>aliyun_stop_all_servers</string>
+        <string>aliyun_test</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+      </columns>
+      <includeRegex>aliyun_.*</includeRegex>
+      <recurse>false</recurse>
+    </listView>
+    <listView>
+      <owner class="hudson" reference="../../.."/>
+      <name>client_dev</name>
+      <description>内网测试客户端的打包任务切页，提供内网环境的Android打包和iOS打包任务&#xd;
+点击打包即可执行，预置的参数可以不用修改。&#xd;
+打包后，会将对应平台的客户端发布到http://192.168.1.24/，提供下载。&#xd;
+可以使用电脑、手机直接访问该地址，或通过开发群的二维码扫码访问进行下载。</description>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator"/>
+        <string>client_ios_dev_full_wl</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+      </columns>
+      <includeRegex>(client_).*.(dev).*</includeRegex>
+      <recurse>false</recurse>
+      <statusFilter>true</statusFilter>
+    </listView>
+    <listView>
+      <owner class="hudson" reference="../../.."/>
+      <name>sonar_server</name>
+      <description>sonar使用dev分支</description>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator"/>
+        <string>sonar_center_server</string>
+        <string>sonar_common_server</string>
+        <string>sonar_db_server</string>
+        <string>sonar_gate_server</string>
+        <string>sonar_net_server</string>
+        <string>sonar_pvp_server</string>
+        <string>sonar_pvpmatch_server</string>
+        <string>sonar_stress_server</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+        <hudson.plugins.robot.view.RobotListViewColumn plugin="robot@1.6.2"/>
+      </columns>
+      <includeRegex>sonar_.*</includeRegex>
+      <recurse>false</recurse>
+    </listView>
+    <listView>
+      <owner class="hudson" reference="../../.."/>
+      <name>resources</name>
+      <description>资源制作流程相关的任务，目前调试中</description>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator"/>
+        <string>res_client_release_sync</string>
+        <string>res_live2d_sync</string>
+        <string>res_master_rsync</string>
+        <string>res_static_build</string>
+        <string>res_static_build_test_step2</string>
+        <string>res_static_build_test_step3</string>
+        <string>res_static_config_step1_chengjie</string>
+        <string>res_static_config_step1_czt</string>
+        <string>res_static_config_step1_liulei</string>
+        <string>res_static_config_step1_renchao</string>
+        <string>res_static_config_step1_weike</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+        <hudson.plugins.robot.view.RobotListViewColumn plugin="robot@1.6.2"/>
+      </columns>
+      <includeRegex>res_.*</includeRegex>
+      <recurse>false</recurse>
+    </listView>
+    <hudson.plugins.view.dashboard.Dashboard plugin="dashboard-view@2.9.7">
+      <owner class="hudson" reference="../../.."/>
+      <name>client_publish</name>
+      <description>外网测试客户端的打包任务切页，提供外网环境的Android打包和iOS打包任务&#xd;
+点击打包即可执行，预置的参数可以不用修改。&#xd;
+打包后，会将对应平台的客户端发布到http://192.168.1.24/，提供下载。&#xd;
+可以使用电脑、手机直接访问该地址，或通过开发群的二维码扫码访问进行下载。</description>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator"/>
+        <string>client_ios_publish_full_wl</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+        <hudson.plugins.robot.view.RobotListViewColumn plugin="robot@1.6.2"/>
+      </columns>
+      <includeRegex>(client_).*.(publish).*</includeRegex>
+      <recurse>false</recurse>
+      <statusFilter>true</statusFilter>
+      <useCssStyle>false</useCssStyle>
+      <includeStdJobList>true</includeStdJobList>
+      <hideJenkinsPanels>false</hideJenkinsPanels>
+      <leftPortletWidth>50%</leftPortletWidth>
+      <rightPortletWidth>50%</rightPortletWidth>
+      <leftPortlets/>
+      <rightPortlets/>
+      <topPortlets/>
+      <bottomPortlets/>
+    </hudson.plugins.view.dashboard.Dashboard>
+    <listView>
+      <owner class="hudson" reference="../../.."/>
+      <name>内网测试服_132</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator"/>
+        <string>132-dev-admin</string>
+        <string>132-dev-chat</string>
+        <string>132-dev-game</string>
+        <string>132-dev-gate</string>
+        <string>132-dev-restart_all</string>
+        <string>132-dev-start-all</string>
+        <string>132-dev-stop-all</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+        <hudson.plugins.robot.view.RobotListViewColumn plugin="robot@1.6.2"/>
+      </columns>
+      <includeRegex>132-dev.*</includeRegex>
+      <recurse>false</recurse>
+    </listView>
+    <listView>
+      <owner class="hudson" reference="../../.."/>
+      <name>内网登陆服</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <jobNames>
+        <comparator class="hudson.util.CaseInsensitiveComparator" reference="../../../listView[11]/jobNames/comparator"/>
+        <string>132_dev_icon</string>
+        <string>132_dev_launch</string>
+        <string>132_dev_launch_start</string>
+        <string>132_dev_launch_stop</string>
+        <string>132_dev_pvp</string>
+        <string>132_dev_pvp_match</string>
+        <string>132_dev_pvp_match_restart</string>
+        <string>132_dev_pvp_restart</string>
+      </jobNames>
+      <jobFilters/>
+      <columns>
+        <hudson.views.StatusColumn/>
+        <hudson.views.WeatherColumn/>
+        <hudson.views.JobColumn/>
+        <hudson.views.LastSuccessColumn/>
+        <hudson.views.LastFailureColumn/>
+        <hudson.views.LastDurationColumn/>
+        <hudson.views.BuildButtonColumn/>
+        <hudson.plugins.robot.view.RobotListViewColumn plugin="robot@1.6.2"/>
+      </columns>
+      <includeRegex>132_dev_.*</includeRegex>
+      <recurse>false</recurse>
+    </listView>
+  </views>
+  <primaryView>All</primaryView>
+  <slaveAgentPort>0</slaveAgentPort>
+  <label></label>
+  <nodeProperties/>
+  <globalNodeProperties>
+    <hudson.slaves.EnvironmentVariablesNodeProperty>
+      <envVars serialization="custom">
+        <unserializable-parents/>
+        <tree-map>
+          <default>
+            <comparator class="hudson.util.CaseInsensitiveComparator"/>
+          </default>
+          <int>5</int>
+          <string>CLIENT_REPO</string>
+          <string>http://192.168.1.138/joker/xClient.git</string>
+          <string>DEFAULT_EMAIL_LIST</string>
+          <string>173855403@qq.com, 58164489@qq.com,  449541545@qq.com, 20719747@qq.com, 56854281@qq.com, 466038223@qq.com, 32598289@qq.com, 16471504@qq.com</string>
+          <string>JOKER_VERSION</string>
+          <string>1.4.8</string>
+          <string>SERVER_REPO</string>
+          <string>http://192.168.1.138/server/xgameserver.git</string>
+          <string>STRESS_BRANCH</string>
+          <string>dev</string>
+        </tree-map>
+      </envVars>
+    </hudson.slaves.EnvironmentVariablesNodeProperty>
+  </globalNodeProperties>
+  <noUsageStatistics>true</noUsageStatistics>
+</hudson>

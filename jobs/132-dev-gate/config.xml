@@ -1,0 +1,228 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<maven2-moduleset plugin="maven-plugin@2.7.1">
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <jenkins.model.BuildDiscarderProperty>
+      <strategy class="hudson.tasks.LogRotator">
+        <daysToKeep>1</daysToKeep>
+        <numToKeep>1</numToKeep>
+        <artifactDaysToKeep>-1</artifactDaysToKeep>
+        <artifactNumToKeep>-1</artifactNumToKeep>
+      </strategy>
+    </jenkins.model.BuildDiscarderProperty>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>MONITOR_OPTS</name>
+          <description></description>
+          <defaultValue>&apos;&apos;</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>JOKER_J_OPTS</name>
+          <description></description>
+          <defaultValue>&apos;-server -Xms15m -Xmx15m -XX:NewRatio=2 -XX:+HeapDumpOnOutOfMemoryError -Dio.netty.leakDetectionLevel=paranoid&apos;</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>RUN_PARAM</name>
+          <description>启动参数：regionId, serverId, tcpPort ./regionConfig.xml</description>
+          <defaultValue>1 1 8093 ./regionConfig.xml</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>APPROOT</name>
+          <description></description>
+          <defaultValue>joker</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>APPFOLDER</name>
+          <description></description>
+          <defaultValue>app</defaultValue>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@3.3.0">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>${SERVER_REPO}</url>
+        <credentialsId>6e9dc5b1-d806-444b-a89c-12e5176babfa</credentialsId>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>*/dev</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions>
+      <hudson.plugins.git.extensions.impl.CleanBeforeCheckout/>
+      <hudson.plugins.git.extensions.impl.SparseCheckoutPaths>
+        <sparseCheckoutPaths>
+          <hudson.plugins.git.extensions.impl.SparseCheckoutPath>
+            <path>gate_server</path>
+          </hudson.plugins.git.extensions.impl.SparseCheckoutPath>
+        </sparseCheckoutPaths>
+      </hudson.plugins.git.extensions.impl.SparseCheckoutPaths>
+    </extensions>
+  </scm>
+  <assignedNode>master</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <jdk>(System)</jdk>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <rootModule>
+    <groupId>com.joker.server</groupId>
+    <artifactId>joker_gate_server</artifactId>
+  </rootModule>
+  <rootPOM>gate_server/pom.xml</rootPOM>
+  <goals>clean package</goals>
+  <aggregatorStyleBuild>true</aggregatorStyleBuild>
+  <incrementalBuild>false</incrementalBuild>
+  <ignoreUpstremChanges>true</ignoreUpstremChanges>
+  <archivingDisabled>false</archivingDisabled>
+  <siteArchivingDisabled>false</siteArchivingDisabled>
+  <fingerprintingDisabled>false</fingerprintingDisabled>
+  <resolveDependencies>false</resolveDependencies>
+  <processPlugins>false</processPlugins>
+  <mavenValidationLevel>-1</mavenValidationLevel>
+  <runHeadless>false</runHeadless>
+  <disableTriggerDownstreamProjects>false</disableTriggerDownstreamProjects>
+  <blockTriggerWhenBuilding>true</blockTriggerWhenBuilding>
+  <settings class="jenkins.mvn.DefaultSettingsProvider"/>
+  <globalSettings class="jenkins.mvn.DefaultGlobalSettingsProvider"/>
+  <reporters/>
+  <publishers/>
+  <buildWrappers/>
+  <prebuilders>
+    <hudson.tasks.Shell>
+      <command>echo &quot;修改gameconfig&quot;
+sed -i &apos;s/\(level=\)&quot;trace&quot;/\1&quot;info&quot;/&apos; ./gate_server/src/main/resources/log4j2.xml
+sed -i &apos;s/\(level=\)&quot;warn&quot;/\1&quot;info&quot;/&apos; ./gate_server/src/main/resources/log4j2.xml
+sed -i &quot;s/&lt;ClientIdleTime&gt;.*&lt;\/ClientIdleTime&gt;/&lt;ClientIdleTime&gt;180000&lt;\/ClientIdleTime&gt;/g&quot; ./gate_server/src/main/resources/gameconfig.xml
+sed -i &quot;s/&lt;MaxTotal&gt;.*&lt;\/MaxTotal&gt;/&lt;MaxTotal&gt;25&lt;\/MaxTotal&gt;/g&quot; ./gate_server/src/main/resources/gameconfig.xml
+sed -i &quot;s/&lt;MaxIdle&gt;.*&lt;\/MaxIdle&gt;/&lt;MaxIdle&gt;10&lt;\/MaxIdle&gt;/g&quot; ./gate_server/src/main/resources/gameconfig.xml
+sed -i &quot;s/&lt;MinIdle&gt;.*&lt;\/MinIdle&gt;/&lt;MinIdle&gt;5&lt;\/MinIdle&gt;/g&quot; ./gate_server/src/main/resources/gameconfig.xml</command>
+    </hudson.tasks.Shell>
+    <jenkins.plugins.publish__over__ssh.BapSshBuilderPlugin plugin="publish-over-ssh@1.13">
+      <delegate>
+        <consolePrefix>SSH: </consolePrefix>
+        <delegate>
+          <publishers>
+            <jenkins.plugins.publish__over__ssh.BapSshPublisher>
+              <configName>内网测试服</configName>
+              <verbose>false</verbose>
+              <transfers>
+                <jenkins.plugins.publish__over__ssh.BapSshTransfer>
+                  <remoteDirectory>${APPROOT}/${APPFOLDER}/gate_server</remoteDirectory>
+                  <sourceFiles>gate_server/script/*</sourceFiles>
+                  <excludes></excludes>
+                  <removePrefix>gate_server/script</removePrefix>
+                  <remoteDirectorySDF>false</remoteDirectorySDF>
+                  <flatten>false</flatten>
+                  <cleanRemote>false</cleanRemote>
+                  <noDefaultExcludes>false</noDefaultExcludes>
+                  <makeEmptyDirs>false</makeEmptyDirs>
+                  <patternSeparator>[, ]+</patternSeparator>
+                  <execCommand>cd ${APPROOT}/${APPFOLDER}
+
+#修改JVM参数
+sed -i &quot;s/APP_ROOT=.*/APP_ROOT=${APPROOT}\/${APPFOLDER}/g&quot; ./gate_server/joker_gate_server
+sed -i &quot;s/MONITOR_OPTS=.*/MONITOR_OPTS=${MONITOR_OPTS}/g&quot;  ./gate_server/joker_gate_server
+sed -i &quot;s/JAVA_OPTS=.*/JAVA_OPTS=${JOKER_J_OPTS}/g&quot;  ./gate_server/joker_gate_server
+
+chmod a+x  ./gate_server/joker_gate_server
+
+echo &quot;停服&quot;
+bash ./gate_server/joker_gate_server stop ${RUN_PARAM}</execCommand>
+                  <execTimeout>120000</execTimeout>
+                  <usePty>false</usePty>
+                </jenkins.plugins.publish__over__ssh.BapSshTransfer>
+                <jenkins.plugins.publish__over__ssh.BapSshTransfer>
+                  <remoteDirectory>${APPROOT}/${APPFOLDER}/gate_server</remoteDirectory>
+                  <sourceFiles>gate_server/src/main/resources/*</sourceFiles>
+                  <excludes></excludes>
+                  <removePrefix>gate_server/src/main/</removePrefix>
+                  <remoteDirectorySDF>false</remoteDirectorySDF>
+                  <flatten>false</flatten>
+                  <cleanRemote>false</cleanRemote>
+                  <noDefaultExcludes>false</noDefaultExcludes>
+                  <makeEmptyDirs>false</makeEmptyDirs>
+                  <patternSeparator>[, ]+</patternSeparator>
+                  <execCommand></execCommand>
+                  <execTimeout>120000</execTimeout>
+                  <usePty>false</usePty>
+                </jenkins.plugins.publish__over__ssh.BapSshTransfer>
+              </transfers>
+              <useWorkspaceInPromotion>false</useWorkspaceInPromotion>
+              <usePromotionTimestamp>false</usePromotionTimestamp>
+            </jenkins.plugins.publish__over__ssh.BapSshPublisher>
+          </publishers>
+          <continueOnError>false</continueOnError>
+          <failOnError>false</failOnError>
+          <alwaysPublishFromMaster>false</alwaysPublishFromMaster>
+          <hostConfigurationAccess class="jenkins.plugins.publish_over_ssh.BapSshPublisherPlugin" reference="../.."/>
+        </delegate>
+      </delegate>
+    </jenkins.plugins.publish__over__ssh.BapSshBuilderPlugin>
+  </prebuilders>
+  <postbuilders>
+    <jenkins.plugins.publish__over__ssh.BapSshBuilderPlugin plugin="publish-over-ssh@1.13">
+      <delegate>
+        <consolePrefix>SSH: </consolePrefix>
+        <delegate>
+          <publishers>
+            <jenkins.plugins.publish__over__ssh.BapSshPublisher>
+              <configName>内网测试服</configName>
+              <verbose>false</verbose>
+              <transfers>
+                <jenkins.plugins.publish__over__ssh.BapSshTransfer>
+                  <remoteDirectory>${APPROOT}/${APPFOLDER}/gate_server</remoteDirectory>
+                  <sourceFiles>gate_server/target/*.jar</sourceFiles>
+                  <excludes></excludes>
+                  <removePrefix>gate_server/target</removePrefix>
+                  <remoteDirectorySDF>false</remoteDirectorySDF>
+                  <flatten>false</flatten>
+                  <cleanRemote>false</cleanRemote>
+                  <noDefaultExcludes>false</noDefaultExcludes>
+                  <makeEmptyDirs>false</makeEmptyDirs>
+                  <patternSeparator>[, ]+</patternSeparator>
+                  <execCommand>cd ${APPROOT}/${APPFOLDER}
+
+bash ./gate_server/joker_gate_server start ${RUN_PARAM}
+
+echo &quot;dump heap&quot;
+ps -ef | grep gate_server.jar |  grep -v grep | awk &apos;{print $2}&apos; | while read pid &gt; /dev/null 2&gt;&amp;1
+do
+  mkdir -p ~/joker/heap_dump
+  cd ~/joker/heap_dump
+  $JAVA_HOME/bin/jmap -dump:format=b,file=gate_server $pid
+done</execCommand>
+                  <execTimeout>120000</execTimeout>
+                  <usePty>false</usePty>
+                </jenkins.plugins.publish__over__ssh.BapSshTransfer>
+              </transfers>
+              <useWorkspaceInPromotion>false</useWorkspaceInPromotion>
+              <usePromotionTimestamp>false</usePromotionTimestamp>
+            </jenkins.plugins.publish__over__ssh.BapSshPublisher>
+          </publishers>
+          <continueOnError>false</continueOnError>
+          <failOnError>false</failOnError>
+          <alwaysPublishFromMaster>false</alwaysPublishFromMaster>
+          <hostConfigurationAccess class="jenkins.plugins.publish_over_ssh.BapSshPublisherPlugin" reference="../.."/>
+        </delegate>
+      </delegate>
+    </jenkins.plugins.publish__over__ssh.BapSshBuilderPlugin>
+  </postbuilders>
+  <runPostStepsIfResult>
+    <name>SUCCESS</name>
+    <ordinal>0</ordinal>
+    <color>BLUE</color>
+    <completeBuild>true</completeBuild>
+  </runPostStepsIfResult>
+</maven2-moduleset>

@@ -1,0 +1,408 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>真的勇士，敢于直面惨淡的人森&#xd;
+E:\android-sdk-windows&#xd;
+E:/android-ndk-r10e&#xd;
+C:/Program Files/Java/jdk1.8.0_65</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <EnvInjectJobProperty plugin="envinject@2.0">
+      <info>
+        <scriptContent>taskkill  /F /FI &quot;IMAGENAME eq unity*</scriptContent>
+        <loadFilesFromMaster>false</loadFilesFromMaster>
+      </info>
+      <on>true</on>
+      <keepJenkinsSystemVariables>true</keepJenkinsSystemVariables>
+      <keepBuildVariables>true</keepBuildVariables>
+      <overrideBuildParameters>false</overrideBuildParameters>
+      <contributors/>
+    </EnvInjectJobProperty>
+    <jenkins.model.BuildDiscarderProperty>
+      <strategy class="hudson.tasks.LogRotator">
+        <daysToKeep>1</daysToKeep>
+        <numToKeep>1</numToKeep>
+        <artifactDaysToKeep>-1</artifactDaysToKeep>
+        <artifactNumToKeep>-1</artifactNumToKeep>
+      </strategy>
+    </jenkins.model.BuildDiscarderProperty>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>BRANCH</name>
+          <description></description>
+          <defaultValue>publish</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>device_type</name>
+          <description></description>
+          <defaultValue>android</defaultValue>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>version_type</name>
+          <description></description>
+          <defaultValue>release</defaultValue>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="org.jenkinsci.plugins.multiplescms.MultiSCM" plugin="multiple-scms@0.6">
+    <scms>
+      <hudson.plugins.git.GitSCM plugin="git@3.3.0">
+        <configVersion>2</configVersion>
+        <userRemoteConfigs>
+          <hudson.plugins.git.UserRemoteConfig>
+            <url>${CLIENT_REPO}</url>
+            <credentialsId>6e9dc5b1-d806-444b-a89c-12e5176babfa</credentialsId>
+          </hudson.plugins.git.UserRemoteConfig>
+        </userRemoteConfigs>
+        <branches>
+          <hudson.plugins.git.BranchSpec>
+            <name>*/${BRANCH}</name>
+          </hudson.plugins.git.BranchSpec>
+        </branches>
+        <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+        <submoduleCfg class="list"/>
+        <extensions/>
+      </hudson.plugins.git.GitSCM>
+    </scms>
+  </scm>
+  <assignedNode>resources_slave</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>true</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <jdk>(System)</jdk>
+  <authToken>wanglei123456</authToken>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.plugins.python.Python plugin="python@1.3">
+      <command>#-*- coding=utf8 -*-
+
+import os
+import shutil
+import urllib2
+
+import os, errno
+
+def mkdir_p(path):
+    try:
+        os.makedirs(path)
+    except OSError: # Python &gt;2.5 (except OSError, exc: for Python &lt;2.5)
+
+        #print &quot;error: %s&quot; % str(exc.errno)
+        print os.path.isdir(path)
+     
+
+
+manifest_path = &quot;http://192.168.1.24/download/StreamingAssets/%s/%s&quot;
+save_dir = &quot;Assets/StreamingAssets/%s&quot;
+save_path = save_dir + &quot;/%s&quot;
+
+
+def save_manifest(platform):
+    target_url = manifest_path % (platform, platform)
+    print target_url
+    manifest = urllib2.urlopen(target_url)
+    mkdir_p(save_dir % platform)
+    f = open(save_path % (platform, platform), &quot;wb&quot;)
+    f.write(manifest.read())
+
+save_manifest(&quot;Android&quot;)</command>
+    </hudson.plugins.python.Python>
+    <hudson.tasks.Shell>
+      <command>#pwd
+#git add .
+#git stash
+#git fetch origin
+#git checkout ${BRANCH}
+#git pull origin ${BRANCH}
+
+#pwd:D:\jenkins_build\workspace\client_android_publish
+rm -fr target
+mkdir -p target
+#cp ../../MyEditorScript.cs ./Assets/Editor/MyEditorScript.cs
+echo SHORT_GIT_COMMIT=${GIT_COMMIT:0:4} &gt; hash.properties
+
+echo &quot;!!!!!!change JDK &amp; SDK &amp; NDK !!!!!!!&quot;
+sed -i &apos;0,/\ANDROIDSDK_IN_JEKENS_MACHINE.*/s/\ANDROIDSDK_IN_JEKENS_MACHINE.*/\ANDROIDSDK_IN_JEKENS_MACHINE=&quot;D:\\\\android-sdk-windows&quot;;/&apos; Assets/Editor/MyEditorScript.cs
+sed -i &apos;0,/\ANDROIDNDK_IN_JEKENS_MACHINE.*/s/\ANDROIDNDK_IN_JEKENS_MACHINE.*/\ANDROIDNDK_IN_JEKENS_MACHINE=&quot;D:\\\\android-ndk-r10e&quot;;/&apos; Assets/Editor/MyEditorScript.cs
+sed -i &apos;0,/\ANDROIDJDK_IN_JEKENS_MACHINE.*/s/\ANDROIDJDK_IN_JEKENS_MACHINE.*/\ANDROIDJDK_IN_JEKENS_MACHINE=&quot;C:\\\\Program Files (x86)\\\\Java\\\\jdk1.8.0&quot;;/&apos; Assets/Editor/MyEditorScript.cs</command>
+    </hudson.tasks.Shell>
+    <org.jenkinsci.plugins.unity3d.Unity3dBuilder plugin="unity3d-plugin@1.3">
+      <unity3dName>unity5.3.3_resource_win10</unity3dName>
+      <argLine>-quit -batchmode -executeMethod MyEditorScript.PerformAndroidBuildInternetResInLocal -logFile D:\jenkins_build\Editor.log</argLine>
+      <unstableReturnCodes></unstableReturnCodes>
+    </org.jenkinsci.plugins.unity3d.Unity3dBuilder>
+    <EnvInjectBuilder plugin="envinject@2.0">
+      <info>
+        <propertiesFilePath>./hash.properties</propertiesFilePath>
+      </info>
+    </EnvInjectBuilder>
+    <hudson.tasks.Shell>
+      <command>cp target/Xgame_build.apk target/xgame_${device_type}_${BRANCH}_${JOKER_VERSION}_${SHORT_GIT_COMMIT}_${SVN_REVISION}_build${BUILD_NUMBER}_${version_type}.apk
+rm target/Xgame_build.apk</command>
+    </hudson.tasks.Shell>
+    <hudson.plugins.python.Python plugin="python@1.3">
+      <command>#-*- coding=utf8 -*-
+&quot;&quot;&quot;
+#Client.json
+_jsonData = {
+    &quot;android&quot;: {
+        &quot;version&quot;: &quot;1.4.8&quot;,
+        &quot;build&quot;: &quot;70&quot;,
+        &quot;git&quot;: &quot;0d5e68...&quot;,
+        &quot;size&quot;: &quot;387.41 MB&quot;,
+        &quot;time&quot;: &quot;2016-09-27 20:28&quot;,
+        &quot;name&quot;:&quot;Xgame_build_dev_1.4.8_6e55.apk&quot;,
+        &quot;url&quot;: &apos;http://192.168.1.143:8080/view/client_publish/job/client_android_publish_reslocal_full/70/artifact/target/Xgame_build_dev_1.4.8_0d5e.apk&apos;
+    },
+    &quot;ios&quot;: {
+        &quot;version&quot;: &quot;1.4.8&quot;,
+        &quot;build&quot;: &quot;41&quot;,
+        &quot;git&quot;: &quot;0d5e68...&quot;,
+        &quot;size&quot;: &quot;365.42 MB&quot;,
+        &quot;time&quot;: &quot;2016-09-27 20:29&quot;,
+        &quot;name&quot;:&quot;Xgame_build_dev_1.4.8_6e55.ipa&quot;,
+        &quot;url&quot;: &quot;itms-services://?action=download-manifest&amp;url=https://oe5ing96n.qnssl.com/client1.4.8_41_0d5e68.plist&quot;
+    }
+}
+&quot;&quot;&quot;
+
+import os
+import shutil
+import urllib2
+import json
+import time
+import subprocess
+# step 1: get env data
+b_branch = os.getenv(&quot;BRANCH&quot;)
+b_version = os.getenv(&quot;JOKER_VERSION&quot;)
+b_build = os.getenv(&quot;BUILD_NUMBER&quot;)
+b_git = os.getenv(&quot;SHORT_GIT_COMMIT&quot;)
+DeviceType = os.getenv(&quot;device_type&quot;)
+VersionType = os.getenv(&quot;version_type&quot;)
+workspace = os.getenv(&quot;WORKSPACE&quot;)
+SVN_REVISION = os.getenv(&quot;SVN_REVISION&quot;)
+ServerIP = &quot;http://192.168.1.24&quot;
+history_template = ServerIP + r&quot;/json/history.json&quot;
+remote_json = ServerIP + r&quot;/json/client.json&quot;
+plist_template = ServerIP + r&quot;/plist/client.plist&quot;
+
+# step 1: prepare data
+remote_package_url = ServerIP + r&quot;/download/%s/%s/&quot; % (DeviceType, b_branch)
+b_time = time.ctime()
+
+
+html_json = urllib2.urlopen(remote_json)
+client_json = json.loads(html_json.read())
+
+client_json[DeviceType][&quot;version&quot;] = b_version
+client_json[DeviceType][&quot;build&quot;] = b_build
+client_json[DeviceType][&quot;git&quot;] = b_git
+
+client_json[DeviceType][&quot;time&quot;] = b_time
+filePrefix = &quot;xgame_%s_%s_%s_%s_%s_build%s_%s&quot; % (DeviceType, b_branch, b_version, SVN_REVISION, b_git, b_build, VersionType)
+
+
+
+# step 2: update json\plist file
+if DeviceType == &quot;ios&quot;:
+    # gen url
+    PackageName = &quot;%s.ipa&quot; % (filePrefix)
+    client_json[DeviceType][&quot;name&quot;] = PackageName
+    b_url = &quot;%s%s&quot; % (remote_package_url, PackageName)
+    # gen package location path for cacl size
+    package = &quot;./target/Xgame_build/build/Release-iphoneos/%s&quot; % (PackageName)
+    # update itms-services data
+    local_plist = &quot;%s.plist&quot; % (filePrefix)
+    remote_plist = &quot;itms-services://?action=download-manifest&amp;url=https://oe5ing96n.qnssl.com/%s&quot; % (local_plist)
+    client_json[DeviceType][&quot;url&quot;] = remote_plist
+    # updata plist data
+    
+    _plist = urllib2.urlopen(plist_template)
+    client_plist = _plist.read()
+    import re
+    sinfo1 = re.compile(r&quot;{client_url}&quot;)
+    sinfo2 = re.compile(r&quot;{version}&quot;)
+    sinfo3 = re.compile(r&quot;{name}&quot;)
+    content = sinfo1.sub(b_url, client_plist)
+    content = sinfo2.sub(b_version, content)
+    content = sinfo3.sub(PackageName, content)
+    # write local plist
+    with open(local_plist, &quot;wb&quot;) as _temp:
+        _temp.write(content)
+        print content
+    if os.path.exists(local_plist):
+        # upload plist to qiniu cloud server
+        cmd1 = [&quot;/Users/xgame/qshell/qshell&quot;, &quot;account&quot;, &quot;KqZFGI68fk7zYn5SYudoAnfhouaeXc0r25OWD71F&quot;, &quot;rkgO8a5B7vUVuUxH4PRqPGrIYYMowe36Zf93SHYO&quot;]
+        cmd2 = [&quot;/Users/xgame/qshell/qshell&quot;, &quot;fput&quot;, &quot;joker&quot;, local_plist, local_plist]
+        for _cmd in [cmd1,cmd2]:
+            print &quot;do cmd : &quot;, _cmd
+            p = subprocess.Popen(_cmd)
+            p.communicate()
+      
+        b_size = &quot;%.2f MB&quot; % (os.path.getsize(package) / 1024 / 1024)
+        client_json[DeviceType][&quot;size&quot;] = b_size 
+        client_json[DeviceType][&quot;url&quot;] = remote_plist 
+else:
+    # gen package name\location\url for android.
+    PackageName = &quot;%s.apk&quot; % (filePrefix)
+    package = &quot;./target/%s&quot; % (PackageName)
+    b_url = &quot;%s%s&quot; % (remote_package_url, PackageName)
+    b_size = &quot;%.2f MB&quot; % (os.path.getsize(package) / 1024 / 1024)
+    client_json[DeviceType][&quot;size&quot;] = b_size  
+    client_json[DeviceType][&quot;url&quot;] = b_url
+    client_json[DeviceType][&quot;name&quot;] = PackageName
+    
+# step 3: rewrite json file
+with open(r&quot;client.json&quot;, &quot;wb&quot;) as local_json:
+    json.dump(client_json, local_json)
+    
+with open(r&quot;%s.json&quot; % filePrefix, &quot;wb&quot;) as local_json:
+    json.dump(client_json, local_json)
+    print client_json
+# step 4: rewrite history.json file.
+
+_history = urllib2.urlopen(history_template)
+client_history = json.loads(_history.read())
+temp_version = {&quot;name&quot;:PackageName,&quot;time&quot;:b_time,&quot;json&quot;:r&quot;%s.json&quot; % filePrefix}
+client_history[DeviceType][VersionType].append(temp_version)
+
+with open(r&quot;history.json&quot;, &quot;wb&quot;) as local_json:
+    json.dump(client_history, local_json)
+    print client_history
+
+</command>
+    </hudson.plugins.python.Python>
+  </builders>
+  <publishers>
+    <hudson.tasks.ArtifactArchiver>
+      <artifacts>target/*.apk</artifacts>
+      <allowEmptyArchive>false</allowEmptyArchive>
+      <onlyIfSuccessful>true</onlyIfSuccessful>
+      <fingerprint>false</fingerprint>
+      <defaultExcludes>true</defaultExcludes>
+      <caseSensitive>true</caseSensitive>
+    </hudson.tasks.ArtifactArchiver>
+    <hudson.plugins.emailext.ExtendedEmailPublisher plugin="email-ext@2.57.2">
+      <recipientList>wangat2001@qq.com,58164489@qq.com,173855403@qq.com,463668874@qq.com,764590960@qq.com,235396987@qq.com,793749906@qq.com,449541545@qq.com,1297773893@qq.com,20719747@qq.com,56854281@qq.com,466038223@qq.com,840014140@qq.com,905168586@qq.com,80633663@qq.com,32598289@qq.com,16471504@qq.com</recipientList>
+      <configuredTriggers>
+        <hudson.plugins.emailext.plugins.trigger.FailureTrigger>
+          <email>
+            <recipientList></recipientList>
+            <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+            <body>$PROJECT_DEFAULT_CONTENT</body>
+            <recipientProviders>
+              <hudson.plugins.emailext.plugins.recipients.DevelopersRecipientProvider/>
+            </recipientProviders>
+            <attachmentsPattern></attachmentsPattern>
+            <attachBuildLog>false</attachBuildLog>
+            <compressBuildLog>false</compressBuildLog>
+            <replyTo>$PROJECT_DEFAULT_REPLYTO</replyTo>
+            <contentType>project</contentType>
+          </email>
+        </hudson.plugins.emailext.plugins.trigger.FailureTrigger>
+        <hudson.plugins.emailext.plugins.trigger.SuccessTrigger>
+          <email>
+            <recipientList></recipientList>
+            <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+            <body>$PROJECT_DEFAULT_CONTENT</body>
+            <recipientProviders>
+              <hudson.plugins.emailext.plugins.recipients.ListRecipientProvider/>
+            </recipientProviders>
+            <attachmentsPattern></attachmentsPattern>
+            <attachBuildLog>false</attachBuildLog>
+            <compressBuildLog>false</compressBuildLog>
+            <replyTo>$PROJECT_DEFAULT_REPLYTO</replyTo>
+            <contentType>project</contentType>
+          </email>
+        </hudson.plugins.emailext.plugins.trigger.SuccessTrigger>
+      </configuredTriggers>
+      <contentType>default</contentType>
+      <defaultSubject>Android外网新版本发布-编号 # $BUILD_NUMBER - $BUILD_STATUS!</defaultSubject>
+      <defaultContent>$DEFAULT_CONTENT</defaultContent>
+      <attachmentsPattern></attachmentsPattern>
+      <presendScript>$DEFAULT_PRESEND_SCRIPT</presendScript>
+      <postsendScript>$DEFAULT_POSTSEND_SCRIPT</postsendScript>
+      <attachBuildLog>false</attachBuildLog>
+      <compressBuildLog>false</compressBuildLog>
+      <replyTo>$DEFAULT_REPLYTO</replyTo>
+      <saveOutput>false</saveOutput>
+      <disabled>false</disabled>
+    </hudson.plugins.emailext.ExtendedEmailPublisher>
+    <jenkins.plugins.publish__over__ftp.BapFtpPublisherPlugin plugin="publish-over-ftp@1.11">
+      <consolePrefix>FTP: </consolePrefix>
+      <delegate>
+        <publishers>
+          <jenkins.plugins.publish__over__ftp.BapFtpPublisher>
+            <configName>192.168.1.24</configName>
+            <verbose>false</verbose>
+            <transfers>
+              <jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+                <remoteDirectory>ClientBackup/${device_type}/${BRANCH}/</remoteDirectory>
+                <sourceFiles>target/*.apk</sourceFiles>
+                <excludes></excludes>
+                <removePrefix>target/</removePrefix>
+                <remoteDirectorySDF>false</remoteDirectorySDF>
+                <flatten>false</flatten>
+                <cleanRemote>false</cleanRemote>
+                <noDefaultExcludes>false</noDefaultExcludes>
+                <makeEmptyDirs>false</makeEmptyDirs>
+                <patternSeparator>[, ]+</patternSeparator>
+                <asciiMode>false</asciiMode>
+              </jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+              <jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+                <remoteDirectory>ClientRelease/json/</remoteDirectory>
+                <sourceFiles>client.json</sourceFiles>
+                <excludes></excludes>
+                <removePrefix></removePrefix>
+                <remoteDirectorySDF>false</remoteDirectorySDF>
+                <flatten>false</flatten>
+                <cleanRemote>false</cleanRemote>
+                <noDefaultExcludes>false</noDefaultExcludes>
+                <makeEmptyDirs>false</makeEmptyDirs>
+                <patternSeparator>[, ]+</patternSeparator>
+                <asciiMode>false</asciiMode>
+              </jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+              <jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+                <remoteDirectory>ClientRelease/json/</remoteDirectory>
+                <sourceFiles>xgame_${device_type}_${BRANCH}_${JOKER_VERSION}_${SHORT_GIT_COMMIT}_${SVN_REVISION}_build${BUILD_NUMBER}_${version_type}.json</sourceFiles>
+                <excludes></excludes>
+                <removePrefix></removePrefix>
+                <remoteDirectorySDF>false</remoteDirectorySDF>
+                <flatten>false</flatten>
+                <cleanRemote>false</cleanRemote>
+                <noDefaultExcludes>false</noDefaultExcludes>
+                <makeEmptyDirs>false</makeEmptyDirs>
+                <patternSeparator>[, ]+</patternSeparator>
+                <asciiMode>false</asciiMode>
+              </jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+              <jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+                <remoteDirectory>ClientRelease/json/</remoteDirectory>
+                <sourceFiles>history.json</sourceFiles>
+                <excludes></excludes>
+                <removePrefix></removePrefix>
+                <remoteDirectorySDF>false</remoteDirectorySDF>
+                <flatten>false</flatten>
+                <cleanRemote>false</cleanRemote>
+                <noDefaultExcludes>false</noDefaultExcludes>
+                <makeEmptyDirs>false</makeEmptyDirs>
+                <patternSeparator>[, ]+</patternSeparator>
+                <asciiMode>false</asciiMode>
+              </jenkins.plugins.publish__over__ftp.BapFtpTransfer>
+            </transfers>
+            <useWorkspaceInPromotion>false</useWorkspaceInPromotion>
+            <usePromotionTimestamp>false</usePromotionTimestamp>
+          </jenkins.plugins.publish__over__ftp.BapFtpPublisher>
+        </publishers>
+        <continueOnError>false</continueOnError>
+        <failOnError>false</failOnError>
+        <alwaysPublishFromMaster>false</alwaysPublishFromMaster>
+        <hostConfigurationAccess class="jenkins.plugins.publish_over_ftp.BapFtpPublisherPlugin" reference="../.."/>
+      </delegate>
+    </jenkins.plugins.publish__over__ftp.BapFtpPublisherPlugin>
+  </publishers>
+  <buildWrappers/>
+</project>
